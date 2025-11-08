@@ -1,0 +1,120 @@
+  html {
+    scroll-behavior: smooth;
+  }
+
+/* Font */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #ffffff;
+  color: #333;
+  transition: opacity 0.8s ease-in;
+}
+
+body.loaded {
+  opacity: 1;
+}
+
+.navbar {
+  background-color: #fff; 
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 2000; 
+}
+
+.navbar-brand,
+.nav-link {
+  color: #7b1113; 
+}
+
+.nav-link:hover {
+  color: #a31217;
+}
+
+/* Hilangkan efek hover pada tombol login */
+.btn-login {
+    background-color: #7b1113;
+    color: #ffffff;
+}
+.btn-login:hover,
+.btn-login:focus,
+.btn-login:active {
+  background-color: #ffffff !important;
+  color: #7b1113 !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+
+/*Card*/
+  .game-card {
+    transition: all 0.3s ease;
+    cursor: pointer;
+    min-height: 420px;
+  }
+  .game-card:hover {
+    transform: translateY(-10px);
+  }
+
+/* assets/css/style.css */
+@font-face {
+  font-family: 'Poppins';
+  src: url('../fonts/Poppins-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../fonts/Poppins-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../fonts/Poppins-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Poppins';
+  src: url('../fonts/Poppins-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+
+/* apply font globally */
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+
+/*Modal Login*/
+    .modal-content {
+      border: none;
+      border-radius: 20px;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .success-icon {
+      font-size: 60px;
+      color: #7b1113;
+      margin-bottom: 15px;
+      animation: pop 0.4s ease;
+    }
+
+    .error-icon {
+      font-size: 60px;
+      color: #dc3545; /* merah bootstrap */
+      margin-bottom: 15px;
+      animation: pop 0.4s ease;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.7); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
