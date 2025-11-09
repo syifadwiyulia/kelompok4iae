@@ -76,6 +76,7 @@
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
     // Toggle password visibility
@@ -114,17 +115,17 @@
         const data = await response.json();
 
         if (response.ok) {
-          // Simpan token JWT ke localStorage
-          localStorage.setItem('token', data.token);
+          // ✅ Simpan token JWT yang benar
+          localStorage.setItem('token', data.data.accessToken);
 
-          // Tampilkan modal sukses
+          // ✅ Tampilkan modal sukses
           const successModal = new bootstrap.Modal(document.getElementById('successModal'));
           successModal.show();
 
-          // Redirect ke dashboard
+          // ✅ Redirect ke dashboard
           setTimeout(() => {
             successModal.hide();
-            window.location.href = 'index.html';
+            window.location.href = 'profile.html';
           }, 2000);
 
         } else {
@@ -142,18 +143,7 @@
         setTimeout(() => errorModal.hide(), 2500);
       }
     });
-
-    // req dengan Authorization Header
-    async function fetchWithAuth(url, options = {}) {
-      const token = localStorage.getItem('token');
-      const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`, 
-        ...options.headers
-      };
-
-      return fetch(url, { ...options, headers });
-    }
   </script>
+  
 </body>
 </html>
