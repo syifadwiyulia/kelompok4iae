@@ -137,7 +137,7 @@
     };
 
     // Fetch tickets from API
-    fetch("https://be-e-wallet.ivantans.web.id/ticket", {
+    fetch("https://be-e-wallet.ivantans.web.id/ticket?currentPage=1&pageSize=10&search", {
       headers: { "Authorization": "Bearer " + token }
     })
     .then(res => res.json())

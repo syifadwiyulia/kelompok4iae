@@ -67,7 +67,7 @@
             </div>
 
             <div class="d-flex justify-content-end mt-4">
-              <button type="submit" class="btn px-4 py-2" style="background-color:#7b1113; color:white;">Next</button>
+              <button type="button" class="btn px-4 py-2" style="background-color:#7b1113; color:white;" onclick="goToDetailOrder()">Next</button>
             </div>
           </form>
         </div>
@@ -109,84 +109,73 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const token = localStorage.getItem("token");
+if (!token) window.location.href = "login.html";
 
-  <script>
-    const token = localStorage.getItem("token");
-    if (!token) window.location.href = "login.html";
+// Ambil data tiket dari localStorage
+const selectedTicket = JSON.parse(localStorage.getItem("selectedTicket"));
+if (!selectedTicket) {
+  alert("No ticket selected!");
+  window.location.href = "ticket.html";
+}
 
-    const ticketId = localStorage.getItem("selectedTicketId");
-    const ticketNameInput = document.getElementById("ticketName");
-    const userNameInput = document.getElementById("userName");
-    const quantityInput = document.getElementById("quantity");
-    const totalPriceText = document.getElementById("totalPrice");
+// Isi form otomatis
+document.getElementById("ticketName").value = selectedTicket.name;
+let ticketData = selectedTicket;
 
-    let ticketData = null;
-    let userData = null;
+// Fetch profil user
+fetch("https://be-e-wallet.ivantans.web.id/user/my-profile", {
+  headers: { "Authorization": "Bearer " + token }
+})
+  .then(res => res.json())
+  .then(data => {
+    document.getElementById("userName").value = data.data.name;
+  })
+  .catch(err => console.error("Error fetching profile:", err));
 
-    // Fetch ticket info
-    fetch(`https://be-e-wallet.ivantans.web.id/ticket/${ticketId}`, {
-      headers: { "Authorization": "Bearer " + token }
-    })
-      .then(res => res.json())
-      .then(data => {
-        ticketData = data.data;
-        ticketNameInput.value = ticketData.name;
-      });
+// Update total price otomatis
+const quantityInput = document.getElementById("quantity");
+const totalPriceText = document.getElementById("totalPrice");
 
-    // Fetch user profile
-    fetch("https://be-e-wallet.ivantans.web.id/user/my-profile", {
-      headers: { "Authorization": "Bearer " + token }
-    })
-      .then(res => res.json())
-      .then(data => {
-        userData = data.data;
-        userNameInput.value = userData.name;
-      });
+function updateTotalPrice() {
+  const qty = parseInt(quantityInput.value) || 0;
+  const total = qty * (ticketData.price || 0);
+  totalPriceText.textContent = "Rp " + total.toLocaleString("id-ID");
+}
 
-    // Update total price dynamically
-    quantityInput.addEventListener("input", () => {
-      const qty = parseInt(quantityInput.value) || 0;
-      const total = qty * (ticketData?.price || 0);
-      totalPriceText.textContent = "Rp " + total.toLocaleString("id-ID");
-    });
+// Jalankan fungsi saat halaman dibuka dan saat quantity berubah
+updateTotalPrice();
+quantityInput.addEventListener("input", updateTotalPrice);
 
-    // Handle order form submit
-    document.getElementById("orderForm").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const qty = parseInt(quantityInput.value);
+// ✅ Fungsi Next (pindah ke detail-order.html)
+function goToDetailOrder() {
+  const ticketId = ticketData.id; // ambil ID tiket
+  const ticketName = ticketData.name;
+  const ticketPrice = ticketData.price;
+  const ticketQty = parseInt(quantityInput.value) || 1;
 
-      try {
-        const res = await fetch("https://be-e-wallet.ivantans.web.id/order", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + token
-          },
-          body: JSON.stringify({
-            ticketId: parseInt(ticketId),
-            quantity: qty
-          })
-        });
+  if (!ticketId || ticketId < 1) {
+    alert("Ticket ID not valid!");
+    return;
+  }
 
-        const result = await res.json();
+  // Simpan ke localStorage
+  localStorage.setItem("ticketId", ticketId);   
+  localStorage.setItem("ticketName", ticketName);
+  localStorage.setItem("ticketPrice", ticketPrice);
+  localStorage.setItem("ticketQty", ticketQty);
 
-        if (res.ok) {
-          alert("Order successful! Ticket added to your order history.");
-          window.location.href = "mytickets.html";
-        } else {
-          alert("" + (result.message || "Order failed"));
-        }
-      } catch (err) {
-        console.error("Error ordering ticket:", err);
-        alert("Something went wrong!");
-      }
-    });
+  // Pindah ke halaman detail order
+  window.location.href = "detail-order.html";
+}
 
-    // Logout
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      localStorage.removeItem("token");
-      window.location.href = "login.html";
-    });
-  </script>
+// Logout
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  localStorage.removeItem("token");
+  window.location.href = "login.html";
+});
+</script>
 </body>
 </html>

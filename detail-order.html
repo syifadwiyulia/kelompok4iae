@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Detail Order | Wahana Tel-U</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #fafafa;
+    }
+    .balance-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .balance-right {
+      text-align: right;
+    }
+    #insufficientMsg {
+      display: none;
+      color: red;
+      font-size: 0.85rem;
+      margin-left: 25px;
+      margin-top: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg shadow-sm py-3 fixed-top bg-white">
+    <div class="container">
+      <a class="navbar-brand fw-bold">Wahana Tel-U</a>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav me-3 gap-3">
+          <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="ticket.html">Tickets</a></li>
+          <li class="nav-item"><a class="nav-link" href="mytickets.html">My Tickets</a></li>
+          <li class="nav-item"><a class="nav-link" href="topup.html">Top Up</a></li>
+        </ul>
+
+        <div class="d-flex align-items-center gap-3">
+          <div class="dropdown">
+            <a href="#" class="d-flex align-items-center gap-2 text-decoration-none" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <img src="assets/user.jpg" alt="User Photo" class="rounded-circle" width="40" height="40" style="object-fit: cover;">
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="profile.html">Profile</a></li>
+              <li><a class="dropdown-item" href="#" id="logoutBtn">Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Detail Order Section -->
+  <section class="container mt-5 pt-5">
+    <div class="row justify-content-center mt-5">
+      <div class="col-md-8">
+        <h3 class="fw-bold text-center mb-4" style="color:#7b1113;">Order Details</h3>
+
+        <div class="card shadow border-0 rounded-4 p-4">
+          <div class="mb-3">
+            <label class="form-label fw-semibold" style="color:#7b1113;">Ticket Name</label>
+            <input type="text" id="ticketName" class="form-control w-100" value="-" disabled>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold" style="color:#7b1113;">Quantity</label>
+            <input type="number" id="quantity" class="form-control w-100" min="1" value="1" disabled>
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-semibold" style="color:#7b1113;">Total Price</label>
+            <input type="text" id="ticketPrice" class="form-control w-100" value="Rp -" disabled>
+          </div>
+
+          <hr class="my-4">
+
+          <!-- Payment method -->
+          <div class="mb-3">
+            <div class="balance-container mb-2">
+              <h5 class="fw-semibold" style="color:#7b1113;">Payment Method</h5>
+              <div class="balance-right">
+                <div style="font-size:12px;color:#666;">Balance</div>
+                <div id="sidebarBalance" style="font-weight:700;color:#7b1113;">Rp 0</div>
+              </div>
+            </div>
+
+            <div class="form-check d-flex justify-content-between align-items-center mb-1">
+              <div class="d-flex align-items-center gap-2">
+                <input class="form-check-input" type="radio" name="paymentMethod" id="payBalance" value="balance" checked>
+                <label class="form-check-label" for="payBalance">Use Balance</label>
+              </div>
+            </div>
+            <div>
+              <small id="insufficientMsg">Saldo tidak cukup</small>
+            </div>
+
+            <div class="form-check mt-2">
+              <input class="form-check-input" type="radio" name="paymentMethod" id="payQr" value="qr">
+              <label class="form-check-label" for="payQr">QR Payment</label>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end mt-4">
+            <button id="payButton" class="btn px-4 py-2 text-white" style="background-color:#7b1113;">Pay Now</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-white py-5 pt-5"
+          style="background-color: #7b1113 !important; border-top-left-radius: 30px; border-top-right-radius: 30px; margin-top: 10%;">
+    <div class="container">
+      <div class="row justify-content-between align-items-start">
+        <div class="col-lg-4 col-md-6 mb-4">
+          <h3 class="fw-bold">Wahana Tel-U</h3>
+          <p class="mb-0">Wahana Tel-U provides easy access for Telkom University students to digital campus services.</p>
+        </div>
+
+        <div class="col-lg-3 col-md-3 mb-4">
+          <h6 class="fw-semibold mb-3">Learn & Get Help</h6>
+          <ul class="list-unstyled">
+            <li><a href="#" class="text-white text-decoration-none">Home</a></li>
+            <li><a href="#" class="text-white text-decoration-none">How It Works</a></li>
+            <li><a href="#" class="text-white text-decoration-none">For Users</a></li>
+            <li><a href="#" class="text-white text-decoration-none">FAQs</a></li>
+          </ul>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+          <h6 class="fw-semibold mb-3">Contact</h6>
+          <p class="mb-1">Telkom University, Bandung</p>
+          <p class="mb-1">Email:
+            <a href="mailto:info@wahanatelu.com" class="text-white text-decoration-none">info@wahanatelu.com</a>
+          </p>
+        </div>
+      </div>
+      <hr class="border-light" />
+      <div class="text-center small">© 2025 Wahana Tel-U. All rights reserved.</div>
+    </div>
+  </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const token = localStorage.getItem('token');
+  if (!token) window.location.href = 'login.html';
+
+  // 🔹 Ambil data dari localStorage
+  const ticketName = localStorage.getItem('ticketName') || '-';
+  const ticketPrice = parseInt(localStorage.getItem('ticketPrice')) || 0;
+  const ticketQty = parseInt(localStorage.getItem('ticketQty')) || 1;
+  const ticketId = Number(localStorage.getItem('ticketId')) || 0;
+
+  // 🔹 Validasi jika ticketId tidak valid
+  if (!ticketId || ticketId < 1) {
+    alert("Ticket ID tidak valid. Silakan pilih tiket kembali.");
+    window.location.href = "ticket.html";
+  }
+
+  // 🔹 Elemen DOM
+  const ticketNameEl = document.getElementById('ticketName');
+  const quantityEl = document.getElementById('quantity');
+  const ticketPriceEl = document.getElementById('ticketPrice');
+  const sidebarBalance = document.getElementById('sidebarBalance');
+  const insufficientMsg = document.getElementById('insufficientMsg');
+  const payButton = document.getElementById('payButton');
+
+  // 🔹 Isi data tampilan
+  ticketNameEl.value = ticketName;
+  quantityEl.value = ticketQty;
+  const totalPrice = ticketPrice * ticketQty;
+  ticketPriceEl.value = 'Rp ' + totalPrice.toLocaleString('id-ID');
+
+  // 🔹 Ambil saldo user
+  let userBalanceAmount = 0;
+  fetch('https://be-e-wallet.ivantans.web.id/user/my-profile', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  })
+    .then(r => r.json())
+    .then(json => {
+      userBalanceAmount = Number(json?.data?.balance || 0);
+      sidebarBalance.textContent = 'Rp ' + userBalanceAmount.toLocaleString('id-ID');
+      insufficientMsg.style.display = userBalanceAmount < totalPrice ? 'block' : 'none';
+    })
+    .catch(err => console.error('Error fetching profile:', err));
+
+  // 🔹 Fungsi buat order tiket
+  async function createOrder(ticketIdParam, qty, amount) {
+    if (!ticketIdParam || ticketIdParam < 1) throw new Error('Ticket ID tidak valid.');
+
+    const res = await fetch('https://be-e-wallet.ivantans.web.id/order/ticket', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      },
+      body: JSON.stringify({
+        ticketId: Number(ticketIdParam),
+        quantity: Number(qty),
+        amount: Number(amount)
+      })
+    });
+
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.message || 'Gagal membuat order tiket.');
+    return json.data?.id || json.data?.orderHistoryId || json.id;
+  }
+
+  // 🔹 Tombol pembayaran
+  payButton.addEventListener('click', async () => {
+    const method = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+    try {
+      const orderId = await createOrder(ticketId, ticketQty, totalPrice);
+
+      if (method === 'balance') {
+        if (userBalanceAmount < totalPrice) {
+          alert('Saldo tidak cukup, silakan pilih metode QR atau lakukan top up.');
+          return;
+        }
+
+        alert('Pembayaran berhasil menggunakan saldo!');
+        window.location.href = 'mytickets.html';
+
+      } else if (method === 'qr') {
+        const res = await fetch('https://be-e-wallet.ivantans.web.id/order/ticket/by-qr/payment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({ orderId })
+        });
+
+        const qrData = await res.json();
+        if (!res.ok) throw new Error(qrData.message || 'QR Payment gagal');
+
+        window.location.href = `qr-payment-ticket.html?orderId=${orderId}`;
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Gagal memproses pembayaran: ' + err.message);
+    }
+  });
+
+  // 🔹 Logout
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    localStorage.removeItem('token');
+    window.location.href = 'login.html';
+  });
+</script>
+
+</body>
+</html>
