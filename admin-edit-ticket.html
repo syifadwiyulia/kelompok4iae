@@ -1,420 +1,452 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Edit Tiket - Wahana Tel U</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
-        * {
-            font-family: 'Poppins', sans-serif;
-        }
-        
-        body {
-            background-color: #f5f5f5;
-            padding-bottom: 80px;
-        }
-        
-        /* Navbar */
-        .navbar {
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .navbar-brand {
-            color: #7b1113 !important;
-            font-weight: 700;
-            font-size: 1.5rem;
-        }
-        
-        .navbar-nav .nav-link {
-            color: #333 !important;
-            font-weight: 500;
-            margin-right: 1.5rem;
-        }
-        
-        .avatar-circle {
-            width: 45px;
-            height: 45px;
-            background-color: #e85149;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 1.25rem;
-        }
-        
-        /* Footer */
-        .footer {
-            background-color: white;
-            border-top: 1px solid #e0e0e0;
-            padding: 20px 0;
-            text-align: center;
-            color: #666;
-            font-size: 0.875rem;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-        }
-        
-        /* Main Content */
-        .main-content {
-            padding: 40px 0;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .page-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 0.5rem;
-        }
-        
-        .page-subtitle {
-            color: #666;
-            font-size: 0.95rem;
-            margin-bottom: 2rem;
-        }
-        
-        /* Form Container */
-        .form-container {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            max-width: 600px;
-        }
-        
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-        
-        .form-label {
-            display: block;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-        }
-        
-        .form-control {
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 0.75rem 1rem;
-            font-size: 0.95rem;
-            color: #333;
-            transition: border-color 0.3s ease;
-        }
-        
-        .form-control:focus {
-            border-color: #4f46e5;
-            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-            outline: none;
-        }
-        
-        .form-control::placeholder {
-            color: #999;
-        }
-        
-        .form-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-        
-        .btn-submit {
-            background-color: #4f46e5;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0.75rem 2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            flex: 1;
-        }
-        
-        .btn-submit:hover {
-            background-color: #4338ca;
-            color: white;
-        }
+      * {
+        font-family: "Poppins", sans-serif;
+      }
 
-        .btn-submit:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-        
-        .btn-cancel {
-            background-color: #e5e7eb;
-            color: #333;
-            border: none;
-            border-radius: 8px;
-            padding: 0.75rem 2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            flex: 1;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .btn-cancel:hover {
-            background-color: #d1d5db;
-        }
+      body {
+        background-color: #f5f5f5;
+        padding-bottom: 80px;
+      }
 
-        /* Breadcrumb */
-        .breadcrumb-link {
-            color: #4f46e5;
-            text-decoration: none;
-            font-weight: 500;
-            margin-bottom: 1.5rem;
-            display: inline-block;
-        }
+      /* Navbar */
+      .navbar {
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
 
-        .breadcrumb-link:hover {
-            text-decoration: underline;
-        }
+      .navbar-brand {
+        color: #7b1113 !important;
+        font-weight: 700;
+        font-size: 1.5rem;
+      }
 
-        /* Alert Messages */
-        .alert {
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-        }
+      .navbar-nav .nav-link {
+        color: #333 !important;
+        font-weight: 500;
+        margin-right: 1.5rem;
+      }
 
-        .alert-success {
-            background-color: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-        }
+      .avatar-circle {
+        width: 45px;
+        height: 45px;
+        background-color: #e85149;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.25rem;
+      }
 
-        .alert-error {
-            background-color: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
-        }
+      /* Footer */
+      .footer {
+        background-color: white;
+        border-top: 1px solid #e0e0e0;
+        padding: 20px 0;
+        text-align: center;
+        color: #666;
+        font-size: 0.875rem;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
 
-        /* Loading Spinner */
-        .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 3px solid #f3f3f3;
-            border-top: 3px solid #4f46e5;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 0.5rem;
-        }
+      /* Main Content */
+      .main-content {
+        padding: 40px 0;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+      .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      .page-subtitle {
+        color: #666;
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+      }
+
+      /* Form Container */
+      .form-container {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        max-width: 600px;
+      }
+
+      .form-group {
+        margin-bottom: 1.5rem;
+      }
+
+      .form-label {
+        display: block;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+      }
+
+      .form-control {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        font-size: 0.95rem;
+        color: #333;
+        transition: border-color 0.3s ease;
+      }
+
+      .form-control:focus {
+        border-color: #4f46e5;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        outline: none;
+      }
+
+      .form-control::placeholder {
+        color: #999;
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .btn-submit {
+        background-color: #4f46e5;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        flex: 1;
+      }
+
+      .btn-submit:hover {
+        background-color: #4338ca;
+        color: white;
+      }
+
+      .btn-submit:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+
+      .btn-cancel {
+        background-color: #e5e7eb;
+        color: #333;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        flex: 1;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .btn-cancel:hover {
+        background-color: #d1d5db;
+      }
+
+      /* Breadcrumb */
+      .breadcrumb-link {
+        color: #4f46e5;
+        text-decoration: none;
+        font-weight: 500;
+        margin-bottom: 1.5rem;
+        display: inline-block;
+      }
+
+      .breadcrumb-link:hover {
+        text-decoration: underline;
+      }
+
+      /* Alert Messages */
+      .alert {
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+      }
+
+      .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .alert-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      /* Loading Spinner */
+      .spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #4f46e5;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-right: 0.5rem;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
         }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg shadow-sm py-3 fixed-top">
-        <div class="container">
+      <div class="container">
         <a class="navbar-brand fw-bold">Wahana Tel-U</a>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-
-    <!-- Profile Section -->
-            <div class="dropdown">
+          <!-- Profile Section -->
+          <div class="dropdown">
             <a href="#" class="d-flex align-items-center gap-2 text-decoration-none" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="assets/user.jpg" alt="User Photo" class="rounded-circle" width="40" height="40" style="object-fit: cover;">
+              <img src="assets/user.jpg" alt="User Photo" class="rounded-circle" width="40" height="40" style="object-fit: cover" />
             </a>
             <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" href="#" id="logoutBtn">Logout</a></li>
+              <li><a class="dropdown-item" href="#" id="logoutBtn">Logout</a></li>
             </ul>
-            </div>
+          </div>
         </div>
-        </div>
+      </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="main-content container-lg" style="margin-top: 80px;">
-        <a href="admin-dashboard.html" class="breadcrumb-link">← Kembali ke Kelola Tiket</a>
-        
-        <!-- Page Title -->
-        <div class="mb-4">
-            <h1 class="page-title">Edit Tiket</h1>
-            <p class="page-subtitle">Ubah informasi tiket di bawah ini</p>
+    <!--Success Modal-->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center p-4">
+          <i class="bi bi-check-circle-fill text-success fs-1 mb-2"></i>
+          <h4 class="fw-bold" style="color: #7b1113">Edit Data Successful!</h4>
         </div>
-
-        <!-- Alert Messages -->
-        <div id="successAlert" class="alert alert-success" style="display: none;">
-            Tiket berhasil diperbarui!
-        </div>
-        <div id="errorAlert" class="alert alert-error" style="display: none;"></div>
-
-        <!-- Form -->
-        <div class="form-container">
-            <form id="editTicketForm">
-                <div class="form-group">
-                    <label class="form-label">Nama Tiket *</label>
-                    <input type="text" id="ticketName" class="form-control" placeholder="Masukkan nama tiket" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Quota *</label>
-                    <input type="number" id="ticketQuota" class="form-control" placeholder="Masukkan jumlah quota" min="1" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Harga (Rp) *</label>
-                    <input type="number" id="ticketPrice" class="form-control" placeholder="Masukkan harga tiket" min="1000" required>
-                </div>
-
-                <div class="form-actions">
-                    <a href="admin-dashboard.html" class="btn-cancel">Batal</a>
-                    <button type="submit" id="submitBtn" class="btn-submit">Simpan Perubahan</button>
-                </div>
-            </form>
-        </div>
+      </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p>&copy; 2025 Wahana Tel U. All rights reserved.</p>
-    </footer>
+    <!--Error Modal-->
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center p-4">
+          <i class="bi bi-x-circle-fill text-danger fs-1 mb-2"></i>
+          <h4 class="fw-bold" style="color: #7b1113">Edit Data Failed!</h4>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content container-lg" style="margin-top: 80px">
+      <!-- <a href="admin-dashboard.html" class="breadcrumb-link">← Kembali ke Kelola Tiket</a> -->
+
+      <!-- Page Title -->
+      <div class="mb-4 text-center">
+        <h1 class="page-title fw-bold" style="color: #7b1113">Edit Tiket</h1>
+        <p class="page-subtitle">Ubah informasi tiket di bawah ini</p>
+      </div>
+
+      <!-- Alert Messages -->
+      <div id="successAlert" class="alert alert-success" style="display: none">Tiket berhasil diperbarui!</div>
+      <div id="errorAlert" class="alert alert-error" style="display: none"></div>
+
+      <!-- Form -->
+      <div class="form-container mx-auto">
+        <form id="editTicketForm">
+          <div class="form-group">
+            <label class="form-label">Nama Tiket *</label>
+            <input type="text" id="ticketName" class="form-control" placeholder="Masukkan nama tiket" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Quota *</label>
+            <input type="number" id="ticketQuota" class="form-control" placeholder="Masukkan jumlah quota" min="1" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Harga (Rp) *</label>
+            <input type="number" id="ticketPrice" class="form-control" placeholder="Masukkan harga tiket" min="1000" required />
+          </div>
+
+          <div class="form-actions">
+            <a href="admin-dashboard.html" class="btn-cancel">Batal</a>
+            <button type="submit" id="submitBtn" class="btn-submit">Simpan Perubahan</button>
+          </div>
+        </form>
+      </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Base URL dari API yang digunakan
-        const API_BASE_URL = 'https://be-e-wallet.ivantans.web.id';
+      // Base URL dari API yang digunakan
+      const API_BASE_URL = "https://be-e-wallet.ivantans.web.id";
 
-        // Fungsi untuk mengambil parameter 'ticketId' dari URL
-        function getTicketIdFromUrl() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const ticketId = urlParams.get('ticketId');
-            console.log('URL Params:', Object.fromEntries(urlParams)); // Debug semua parameter URL
-            console.log('TicketId extracted:', ticketId); // Debug ticketId yang ditemukan
-            return ticketId;
+      // Fungsi untuk mengambil parameter 'ticketId' dari URL
+      function getTicketIdFromUrl() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const ticketId = urlParams.get("ticketId");
+        console.log("URL Params:", Object.fromEntries(urlParams)); // Debug semua parameter URL
+        console.log("TicketId extracted:", ticketId); // Debug ticketId yang ditemukan
+        return ticketId;
+      }
+
+      // Fungsi utama untuk memuat data tiket berdasarkan ID
+      async function loadTicketData() {
+        const ticketId = getTicketIdFromUrl();
+
+        // Jika ticketId tidak ditemukan di URL
+        if (!ticketId) {
+          alert("ID tiket tidak ditemukan. Silakan kembali ke halaman kelola tiket.");
+          window.location.href = "admin-dashboard.html";
+          return;
         }
 
-        // Fungsi utama untuk memuat data tiket berdasarkan ID
-        async function loadTicketData() {
-            const ticketId = getTicketIdFromUrl();
+        try {
+          // Ambil token login dari localStorage
+          const token = localStorage.getItem("token");
+          if (!token) {
+            alert("Token tidak ditemukan. Silakan login kembali.");
+            window.location.href = "login.html";
+            return;
+          }
 
-            // Jika ticketId tidak ditemukan di URL
-            if (!ticketId) {
-                alert('ID tiket tidak ditemukan. Silakan kembali ke halaman kelola tiket.');
-                window.location.href = 'admin-dashboard.html';
-                return;
-            }
+          // Kirim request GET ke API untuk mengambil detail tiket
+          const response = await fetch(`${API_BASE_URL}/ticket/${ticketId}`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          });
 
-            try {
-                // Ambil token login dari localStorage
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    alert('Token tidak ditemukan. Silakan login kembali.');
-                    window.location.href = 'login.html';
-                    return;
-                }
+          // Jika request gagal, tampilkan pesan error dan kembali ke dashboard
+          if (!response.ok) {
+            const errorData = await response.json();
+            alert("Gagal memuat data tiket: " + (errorData.message || `Error ${response.status}`));
+            window.location.href = "admin-dashboard.html";
+            return;
+          }
 
-                // Kirim request GET ke API untuk mengambil detail tiket
-                const response = await fetch(`${API_BASE_URL}/ticket/${ticketId}`, {
-                    headers: {
-                        'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                });
+          // Jika sukses, ambil data tiket dari response
+          const data = await response.json();
+          const ticket = data.data || data;
 
-                // Jika request gagal, tampilkan pesan error dan kembali ke dashboard
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    alert('Gagal memuat data tiket: ' + (errorData.message || `Error ${response.status}`));
-                    window.location.href = 'admin-dashboard.html';
-                    return;
-                }
+          // Tampilkan data tiket ke form input
+          document.getElementById("ticketName").value = ticket.ticketName || "";
+          document.getElementById("ticketQuota").value = ticket.ticketQuota || "";
+          document.getElementById("ticketPrice").value = ticket.ticketPrice || "";
+        } catch (error) {
+          console.log("Error:", error);
+          alert("Terjadi kesalahan saat memuat data tiket: " + error.message);
+          window.location.href = "admin-dashboard.html";
+        }
+      }
 
-                // Jika sukses, ambil data tiket dari response
-                const data = await response.json();
-                const ticket = data.data || data;
+      // Event listener untuk menangani submit form edit tiket
+      document.getElementById("editTicketForm").addEventListener("submit", async function (e) {
+        e.preventDefault(); // Mencegah halaman reload
 
-                // Tampilkan data tiket ke form input
-                document.getElementById('ticketName').value = ticket.ticketName || '';
-                document.getElementById('ticketQuota').value = ticket.ticketQuota || '';
-                document.getElementById('ticketPrice').value = ticket.ticketPrice || '';
-
-            } catch (error) {
-                console.log('Error:', error);
-                alert('Terjadi kesalahan saat memuat data tiket: ' + error.message);
-                window.location.href = 'admin-dashboard.html';
-            }
+        // Ambil ID tiket dari URL
+        const ticketId = getTicketIdFromUrl();
+        if (!ticketId) {
+          alert("ID tiket tidak ditemukan.");
+          return;
         }
 
-        // Event listener untuk menangani submit form edit tiket
-        document.getElementById('editTicketForm').addEventListener('submit', async function(e) {
-            e.preventDefault(); // Mencegah halaman reload
+        // Ambil data dari input form
+        const ticketName = document.getElementById("ticketName").value.trim();
+        const ticketQuota = document.getElementById("ticketQuota").value;
+        const ticketPrice = document.getElementById("ticketPrice").value;
 
-            // Ambil ID tiket dari URL
-            const ticketId = getTicketIdFromUrl();
-            if (!ticketId) {
-                alert('ID tiket tidak ditemukan.');
-                return;
+        // Cek apakah token login ada
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("Token tidak ditemukan. Silakan login kembali.");
+          window.location.href = "login.html";
+          return;
+        }
+
+        try {
+          // Kirim request PATCH untuk memperbarui data tiket
+          const response = await fetch(`${API_BASE_URL}/ticket/${ticketId}`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              ticketName: ticketName,
+              ticketQuota: parseInt(ticketQuota), // ubah ke integer
+              ticketPrice: parseInt(ticketPrice), // ubah ke integer
+            }),
+          });
+
+          // Jika berhasil update tiket
+          //   if (response.ok) {
+          //     alert("Tiket berhasil diperbarui!");
+          //     window.location.href = "admin-dashboard.html";
+          //   } else {
+          //     // Jika gagal update tiket
+          //     const errorData = await response.json();
+          //     alert("Gagal memperbarui tiket: " + (errorData.message || "Terjadi kesalahan"));
+          //   }
+          // } catch (error) {
+          //   console.log("Error:", error);
+          //   alert("Terjadi kesalahan saat menghubungi server: " + error.message);
+          // }
+          const successModal = new bootstrap.Modal(document.getElementById("successModal"));
+          successModal.show();
+          setTimeout(() => {
+            successModal.hide();
+            if (response.ok) {
+              window.location.href = "admin-dashboard.html";
+            } else {
+              window.location.href = "index.html";
             }
+          }, 2000);
+        } catch (error) {
+          console.error("Detail error tambah data:", error);
+          const errorModal = new bootstrap.Modal(document.getElementById("errorModal"));
+          document.getElementById("errorMessage").textContent = error.message || "Connection error. Please try again.";
+          errorModal.show();
+          setTimeout(() => errorModal.hide(), 2500);
+        }
+      });
 
-            // Ambil data dari input form
-            const ticketName = document.getElementById('ticketName').value.trim();
-            const ticketQuota = document.getElementById('ticketQuota').value;
-            const ticketPrice = document.getElementById('ticketPrice').value;
+      // Jalankan fungsi loadTicketData() ketika halaman selesai dimuat
+      document.addEventListener("DOMContentLoaded", loadTicketData);
 
-            // Cek apakah token login ada
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Token tidak ditemukan. Silakan login kembali.');
-                window.location.href = 'login.html';
-                return;
-            }
-
-            try {
-                // Kirim request PATCH untuk memperbarui data tiket
-                const response = await fetch(`${API_BASE_URL}/ticket/${ticketId}`, {
-                    method: 'PATCH',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({
-                        ticketName: ticketName,
-                        ticketQuota: parseInt(ticketQuota), // ubah ke integer
-                        ticketPrice: parseInt(ticketPrice)  // ubah ke integer
-                    })
-                });
-
-                // Jika berhasil update tiket
-                if (response.ok) {
-                    alert('Tiket berhasil diperbarui!');
-                    window.location.href = 'admin-dashboard.html';
-                } else {
-                    // Jika gagal update tiket
-                    const errorData = await response.json();
-                    alert('Gagal memperbarui tiket: ' + (errorData.message || 'Terjadi kesalahan'));
-                }
-            } catch (error) {
-                console.log('Error:', error);
-                alert('Terjadi kesalahan saat menghubungi server: ' + error.message);
-            }
-        });
-
-        // Jalankan fungsi loadTicketData() ketika halaman selesai dimuat
-        document.addEventListener('DOMContentLoaded', loadTicketData);
-
-        // Fungsi logout: hapus token dan kembali ke halaman login
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('token');
-            window.location.href = 'login.html';
-        });
+      // Fungsi logout: hapus token dan kembali ke halaman login
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        localStorage.removeItem("token");
+        window.location.href = "login.html";
+      });
     </script>
-
-</body>
+  </body>
 </html>
