@@ -1,472 +1,499 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Hapus Tiket - Wahana Tel U</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <style>
-        * {
-            font-family: 'Poppins', sans-serif;
-        }
-        
-        body {
-            background-color: #f5f5f5;
-            padding-bottom: 80px;
-        }
-        
-        /* Navbar */
-        .navbar {
-            background-color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .navbar-brand {
-            color: #7b1113 !important;
-            font-weight: 700;
-            font-size: 1.5rem;
-        }
-        
-        .navbar-nav .nav-link {
-            color: #333 !important;
-            font-weight: 500;
-            margin-right: 1.5rem;
-        }
-        
-        .avatar-circle {
-            width: 45px;
-            height: 45px;
-            background-color: #e85149;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            font-size: 1.25rem;
-        }
-        
-        /* Footer */
-        .footer {
-            background-color: white;
-            border-top: 1px solid #e0e0e0;
-            padding: 20px 0;
-            text-align: center;
-            color: #666;
-            font-size: 0.875rem;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-        }
-        
-        /* Main Content */
-        .main-content {
-            padding: 40px 0;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .page-title {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 0.5rem;
-        }
-        
-        /* Delete Confirmation Container */
-        .delete-container {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            max-width: 500px;
-            text-align: center;
-        }
-        
-        .delete-icon {
-            width: 80px;
-            height: 80px;
-            background-color: #fee2e2;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            margin: 0 auto 1.5rem;
-        }
-        
-        .delete-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 0.75rem;
-        }
-        
-        .delete-description {
-            color: #666;
-            font-size: 0.95rem;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
-        
-        .ticket-info {
-            background-color: #f9f9f9;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            text-align: left;
-        }
-        
-        .ticket-info-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #e0e0e0;
-        }
-        
-        .ticket-info-item:last-child {
-            border-bottom: none;
-        }
-        
-        .ticket-info-label {
-            font-weight: 600;
-            color: #666;
-        }
-        
-        .ticket-info-value {
-            color: #333;
-        }
-        
-        .delete-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-        }
-        
-        .btn-cancel {
-            background-color: #e5e7eb;
-            color: #333;
-            border: none;
-            border-radius: 8px;
-            padding: 0.75rem 2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            flex: 1;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .btn-cancel:hover {
-            background-color: #d1d5db;
-        }
-        
-        .btn-delete {
-            background-color: #dc2626;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 0.75rem 2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            flex: 1;
-        }
-        
-        .btn-delete:hover {
-            background-color: #b91c1c;
-        }
+      * {
+        font-family: "Poppins", sans-serif;
+      }
 
-        .btn-delete:disabled {
-            background-color: #9ca3af;
-            cursor: not-allowed;
-        }
+      body {
+        background-color: #f5f5f5;
+        padding-bottom: 80px;
+      }
 
-        /* Breadcrumb */
-        .breadcrumb-link {
-            color: #4f46e5;
-            text-decoration: none;
-            font-weight: 500;
-            margin-bottom: 1.5rem;
-            display: inline-block;
-        }
+      /* Navbar */
+      .navbar {
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
 
-        .breadcrumb-link:hover {
-            text-decoration: underline;
-        }
+      .navbar-brand {
+        color: #7b1113 !important;
+        font-weight: 700;
+        font-size: 1.5rem;
+      }
 
-        .error-message {
-            background-color: #fee2e2;
-            color: #dc2626;
-            border: 1px solid #fecaca;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
+      .navbar-nav .nav-link {
+        color: #333 !important;
+        font-weight: 500;
+        margin-right: 1.5rem;
+      }
 
-        .loading-message {
-            background-color: #dbeafe;
-            color: #0284c7;
-            border: 1px solid #bfdbfe;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
+      .avatar-circle {
+        width: 45px;
+        height: 45px;
+        background-color: #e85149;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1.25rem;
+      }
+
+      /* Footer */
+      .footer {
+        background-color: white;
+        border-top: 1px solid #e0e0e0;
+        padding: 20px 0;
+        text-align: center;
+        color: #666;
+        font-size: 0.875rem;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+      }
+
+      /* Main Content */
+      .main-content {
+        padding: 40px 0;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .page-title {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      /* Delete Confirmation Container */
+      .delete-container {
+        background: white;
+        border-radius: 12px;
+        padding: 2rem;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        max-width: 500px;
+        text-align: center;
+      }
+
+      .delete-icon {
+        width: 80px;
+        height: 80px;
+        background-color: #fee2e2;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        margin: 0 auto 1.5rem;
+      }
+
+      .delete-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 0.75rem;
+      }
+
+      .delete-description {
+        color: #666;
+        font-size: 0.95rem;
+        margin-bottom: 1.5rem;
+        line-height: 1.6;
+      }
+
+      .ticket-info {
+        background-color: #f9f9f9;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        text-align: left;
+      }
+
+      .ticket-info-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #e0e0e0;
+      }
+
+      .ticket-info-item:last-child {
+        border-bottom: none;
+      }
+
+      .ticket-info-label {
+        font-weight: 600;
+        color: #666;
+      }
+
+      .ticket-info-value {
+        color: #333;
+      }
+
+      .delete-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+
+      .btn-cancel {
+        background-color: #e5e7eb;
+        color: #333;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        flex: 1;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .btn-cancel:hover {
+        background-color: #d1d5db;
+      }
+
+      .btn-delete {
+        background-color: #dc2626;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        flex: 1;
+      }
+
+      .btn-delete:hover {
+        background-color: #b91c1c;
+      }
+
+      .btn-delete:disabled {
+        background-color: #9ca3af;
+        cursor: not-allowed;
+      }
+
+      /* Breadcrumb */
+      .breadcrumb-link {
+        color: #4f46e5;
+        text-decoration: none;
+        font-weight: 500;
+        margin-bottom: 1.5rem;
+        display: inline-block;
+      }
+
+      .breadcrumb-link:hover {
+        text-decoration: underline;
+      }
+
+      .error-message {
+        background-color: #fee2e2;
+        color: #dc2626;
+        border: 1px solid #fecaca;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
+
+      .loading-message {
+        background-color: #dbeafe;
+        color: #0284c7;
+        border: 1px solid #bfdbfe;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg shadow-sm py-3 fixed-top">
-        <div class="container">
+      <div class="container">
         <a class="navbar-brand fw-bold">Wahana Tel-U</a>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-
-    <!-- Profile Section -->
-            <div class="dropdown">
+          <!-- Profile Section -->
+          <div class="dropdown">
             <a href="#" class="d-flex align-items-center gap-2 text-decoration-none" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <img src="assets/user.jpg" alt="User Photo" class="rounded-circle" width="40" height="40" style="object-fit: cover;">
+              <img src="assets/user.jpg" alt="User Photo" class="rounded-circle" width="40" height="40" style="object-fit: cover" />
             </a>
             <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
-                <li><a class="dropdown-item" href="#" id="logoutBtn">Logout</a></li>
+              <li><a class="dropdown-item" href="#" id="logoutBtn">Logout</a></li>
             </ul>
-            </div>
+          </div>
         </div>
-        </div>
+      </div>
     </nav>
 
-    <!-- Main Content -->
-    <div class="main-content container-lg" style="margin-top: 80px;">
-        <a href="admin-dashboard.html" class="breadcrumb-link">← Kembali ke Kelola Tiket</a>
-
-        <!-- Page Title -->
-        <div class="mb-4">
-            <h1 class="page-title">Hapus Tiket</h1>
-            <p class="page-subtitle">Pikir-pikir lagi kalo mau hapus</p>
+    <!--Success Modal-->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center p-4">
+          <i class="bi bi-check-circle-fill text-success fs-1 mb-2"></i>
+          <h4 class="fw-bold" style="color: #7b1113">Delete Data Successful!</h4>
         </div>
-        
-        <!-- Delete Confirmation -->
-        <div class="delete-container">
-            <div id="errorMessage"></div>
-            <div id="loadingMessage" class="loading-message" style="display: none;">
-                Memuat data tiket...
-            </div>
-
-            <div class="delete-icon">⚠️</div>
-            <h2 class="delete-title">Hapus Tiket?</h2>
-            <p class="delete-description">
-                Apakah Anda yakin ingin menghapus tiket ini? Tindakan ini tidak dapat dibatalkan.
-            </p>
-            
-            <!-- Ticket Info -->
-            <div class="ticket-info">
-                <div class="ticket-info-item">
-                    <span class="ticket-info-label">Nama Tiket:</span>
-                    <span class="ticket-info-value" id="ticketName">-</span>
-                </div>
-                <div class="ticket-info-item">
-                    <span class="ticket-info-label">ID:</span>
-                    <span class="ticket-info-value" id="ticketId">-</span>
-                </div>
-                <div class="ticket-info-item">
-                    <span class="ticket-info-label">Quota:</span>
-                    <span class="ticket-info-value" id="ticketQuota">-</span>
-                </div>
-                <div class="ticket-info-item">
-                    <span class="ticket-info-label">Harga:</span>
-                    <span class="ticket-info-value" id="ticketPrice">-</span>
-                </div>
-            </div>
-
-            <div class="delete-actions">
-                <a href="admin-dashboard.html" class="btn-cancel">Batal</a>
-                <button type="button" class="btn-delete" id="deleteButton" onclick="deleteTicket()">Hapus Tiket</button>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <p>&copy; 2025 Wahana Tel U. All rights reserved.</p>
-    </footer>
+    <!--Error Modal-->
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center p-4">
+          <i class="bi bi-x-circle-fill text-danger fs-1 mb-2"></i>
+          <h4 class="fw-bold" style="color: #7b1113">Delete Data Failed!</h4>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content container-lg" style="margin-top: 80px">
+      <!-- <div class="back-actions">
+        <a href="admin-dashboard.html" class="btn btn-primary">← Kembali ke Kelola Tiket</a>
+      </div>
+      <a href="admin-dashboard.html" class="breadcrumb-link">← Kembali ke Kelola Tiket</a> -->
+
+      <!-- Page Title -->
+      <div class="mb-4 text-center">
+        <h1 class="page-title fw-bold" style="color: #7b1113">Hapus Tiket</h1>
+        <p class="page-subtitle">Pikir-pikir lagi kalo mau hapus</p>
+      </div>
+
+      <!-- Delete Confirmation -->
+      <div class="delete-container mx-auto">
+        <div id="errorMessage"></div>
+        <div id="loadingMessage" class="loading-message" style="display: none">Memuat data tiket...</div>
+
+        <div class="delete-icon">⚠️</div>
+        <h2 class="delete-title">Hapus Tiket?</h2>
+        <p class="delete-description">Apakah Anda yakin ingin menghapus tiket ini? Tindakan ini tidak dapat dibatalkan.</p>
+
+        <!-- Ticket Info -->
+        <div class="ticket-info">
+          <div class="ticket-info-item">
+            <span class="ticket-info-label">Nama Tiket:</span>
+            <span class="ticket-info-value" id="ticketName">-</span>
+          </div>
+          <div class="ticket-info-item">
+            <span class="ticket-info-label">ID:</span>
+            <span class="ticket-info-value" id="ticketId">-</span>
+          </div>
+          <div class="ticket-info-item">
+            <span class="ticket-info-label">Quota:</span>
+            <span class="ticket-info-value" id="ticketQuota">-</span>
+          </div>
+          <div class="ticket-info-item">
+            <span class="ticket-info-label">Harga:</span>
+            <span class="ticket-info-value" id="ticketPrice">-</span>
+          </div>
+        </div>
+
+        <div class="delete-actions">
+          <a href="admin-dashboard.html" class="btn-cancel">Batal</a>
+          <button type="button" class="btn-delete" id="deleteButton" onclick="deleteTicket()">Hapus Tiket</button>
+        </div>
+      </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // URL dasar untuk API backend
-        const API_BASE_URL = 'https://be-e-wallet.ivantans.web.id';
-        // Variabel global untuk menyimpan ID tiket yang sedang aktif
-        let currentTicketId = null;
+      // URL dasar untuk API backend
+      const API_BASE_URL = "https://be-e-wallet.ivantans.web.id";
+      // Variabel global untuk menyimpan ID tiket yang sedang aktif
+      let currentTicketId = null;
 
-        // Fungsi untuk mengambil nilai dari beberapa kemungkinan nama field
-        function getFieldValue(obj, fields) {
-            for (const field of fields) {
-                if (obj && obj[field] !== undefined && obj[field] !== null) {
-                    return obj[field];
-                }
-            }
-            return null; // Kembalikan null jika semua field tidak ditemukan
+      // Fungsi untuk mengambil nilai dari beberapa kemungkinan nama field
+      function getFieldValue(obj, fields) {
+        for (const field of fields) {
+          if (obj && obj[field] !== undefined && obj[field] !== null) {
+            return obj[field];
+          }
+        }
+        return null; // Kembalikan null jika semua field tidak ditemukan
+      }
+
+      // Fungsi untuk mendapatkan ticketId dari parameter URL
+      function getTicketIdFromUrl() {
+        const params = new URLSearchParams(window.location.search);
+        const ticketId = params.get("ticketId");
+        console.log("URL Params:", Object.fromEntries(params));
+        console.log("TicketId extracted:", ticketId);
+        return ticketId;
+      }
+
+      // Fungsi utama untuk memuat data tiket berdasarkan ID di URL
+      async function loadTicketData() {
+        currentTicketId = getTicketIdFromUrl(); // Ambil ID dari URL
+
+        // Jika ID tidak ada di URL
+        if (!currentTicketId) {
+          showError("ID tiket tidak ditemukan. Silakan kembali ke halaman kelola tiket.");
+          document.getElementById("deleteButton").disabled = true;
+          return;
         }
 
-        // Fungsi untuk mendapatkan ticketId dari parameter URL
-        function getTicketIdFromUrl() {
-            const params = new URLSearchParams(window.location.search);
-            const ticketId = params.get('ticketId');
-            console.log('URL Params:', Object.fromEntries(params));
-            console.log('TicketId extracted:', ticketId);
-            return ticketId;
+        // Tampilkan indikator loading
+        document.getElementById("loadingMessage").style.display = "block";
+
+        try {
+          // Ambil token dari localStorage (autentikasi)
+          const token = localStorage.getItem("token");
+          if (!token) {
+            showError("Token tidak ditemukan. Silakan login kembali.");
+            document.getElementById("deleteButton").disabled = true;
+            return;
+          }
+
+          // Kirim permintaan GET ke endpoint detail tiket
+          const response = await fetch(`${API_BASE_URL}/ticket/${currentTicketId}`, {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`, // Kirim token sebagai header
+            },
+          });
+
+          console.log("API Response Status:", response.status);
+
+          // Jika status bukan 200 OK, lempar error
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          // Ambil data hasil respons
+          const data = await response.json();
+          console.log("Ticket Data:", data);
+
+          // Data utama tiket (bisa berada di dalam field `data`)
+          const ticketData = data.data || {};
+
+          // Ambil setiap nilai tiket dengan fleksibilitas nama field
+          const ticketName = getFieldValue(ticketData, ["ticketName", "name", "ticket_name"]);
+          const ticketQuota = getFieldValue(ticketData, ["ticketQuota", "quota", "ticket_quota"]);
+          const ticketPrice = getFieldValue(ticketData, ["ticketPrice", "price", "ticket_price"]);
+
+          // Jika data tidak lengkap
+          if (!ticketName || ticketQuota === null || ticketPrice === null) {
+            showError("Data tiket tidak lengkap.");
+            document.getElementById("deleteButton").disabled = true;
+            return;
+          }
+
+          // Masukkan data tiket ke dalam elemen HTML
+          document.getElementById("ticketName").textContent = ticketName;
+          document.getElementById("ticketId").textContent = currentTicketId;
+          document.getElementById("ticketQuota").textContent = ticketQuota;
+          document.getElementById("ticketPrice").textContent = new Intl.NumberFormat("id-ID", {
+            style: "currency",
+            currency: "IDR",
+          }).format(ticketPrice); // Format harga ke dalam format Rupiah
+
+          // Sembunyikan loading setelah data tampil
+          document.getElementById("loadingMessage").style.display = "none";
+        } catch (error) {
+          // Tangani error saat memuat data
+          console.error("Error loading ticket:", error);
+          showError(`Gagal memuat data tiket: ${error.message}`);
+          document.getElementById("deleteButton").disabled = true;
+          document.getElementById("loadingMessage").style.display = "none";
+        }
+      }
+
+      // Fungsi untuk menghapus tiket berdasarkan ID
+      async function deleteTicket() {
+        // Pastikan tiket valid
+        if (!currentTicketId) {
+          alert("ID tiket tidak valid.");
+          return;
         }
 
-        // Fungsi utama untuk memuat data tiket berdasarkan ID di URL
-        async function loadTicketData() {
-            currentTicketId = getTicketIdFromUrl(); // Ambil ID dari URL
-
-            // Jika ID tidak ada di URL
-            if (!currentTicketId) {
-                showError('ID tiket tidak ditemukan. Silakan kembali ke halaman kelola tiket.');
-                document.getElementById('deleteButton').disabled = true;
-                return;
-            }
-
-            // Tampilkan indikator loading
-            document.getElementById('loadingMessage').style.display = 'block';
-
-            try {
-                // Ambil token dari localStorage (autentikasi)
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    showError('Token tidak ditemukan. Silakan login kembali.');
-                    document.getElementById('deleteButton').disabled = true;
-                    return;
-                }
-
-                // Kirim permintaan GET ke endpoint detail tiket
-                const response = await fetch(`${API_BASE_URL}/ticket/${currentTicketId}`, {
-                    method: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Authorization': `Bearer ${token}` // Kirim token sebagai header
-                    }
-                });
-
-                console.log('API Response Status:', response.status);
-
-                // Jika status bukan 200 OK, lempar error
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                // Ambil data hasil respons
-                const data = await response.json();
-                console.log('Ticket Data:', data);
-
-                // Data utama tiket (bisa berada di dalam field `data`)
-                const ticketData = data.data || {};
-
-                // Ambil setiap nilai tiket dengan fleksibilitas nama field
-                const ticketName = getFieldValue(ticketData, ['ticketName', 'name', 'ticket_name']);
-                const ticketQuota = getFieldValue(ticketData, ['ticketQuota', 'quota', 'ticket_quota']);
-                const ticketPrice = getFieldValue(ticketData, ['ticketPrice', 'price', 'ticket_price']);
-
-                // Jika data tidak lengkap
-                if (!ticketName || ticketQuota === null || ticketPrice === null) {
-                    showError('Data tiket tidak lengkap.');
-                    document.getElementById('deleteButton').disabled = true;
-                    return;
-                }
-
-                // Masukkan data tiket ke dalam elemen HTML
-                document.getElementById('ticketName').textContent = ticketName;
-                document.getElementById('ticketId').textContent = currentTicketId;
-                document.getElementById('ticketQuota').textContent = ticketQuota;
-                document.getElementById('ticketPrice').textContent = new Intl.NumberFormat('id-ID', {
-                    style: 'currency',
-                    currency: 'IDR'
-                }).format(ticketPrice); // Format harga ke dalam format Rupiah
-
-                // Sembunyikan loading setelah data tampil
-                document.getElementById('loadingMessage').style.display = 'none';
-
-            } catch (error) {
-                // Tangani error saat memuat data
-                console.error('Error loading ticket:', error);
-                showError(`Gagal memuat data tiket: ${error.message}`);
-                document.getElementById('deleteButton').disabled = true;
-                document.getElementById('loadingMessage').style.display = 'none';
-            }
+        // Cek token login
+        const token = localStorage.getItem("token");
+        if (!token) {
+          alert("Token tidak ditemukan. Silakan login kembali.");
+          return;
         }
 
-        // Fungsi untuk menghapus tiket berdasarkan ID
-        async function deleteTicket() {
-            // Pastikan tiket valid
-            if (!currentTicketId) {
-                alert('ID tiket tidak valid.');
-                return;
+        // Ubah tombol delete menjadi loading state
+        const deleteButton = document.getElementById("deleteButton");
+        deleteButton.disabled = true;
+        deleteButton.textContent = "Menghapus...";
+
+        try {
+          // Kirim permintaan DELETE ke endpoint API
+          const response = await fetch(`${API_BASE_URL}/ticket/${currentTicketId}`, {
+            method: "DELETE",
+            headers: {
+              Accept: "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          console.log("Delete Response Status:", response.status);
+
+          // Jika gagal (status bukan 200)
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          // Jika berhasil dihapus
+          const successModal = new bootstrap.Modal(document.getElementById("successModal"));
+          successModal.show();
+          setTimeout(() => {
+            successModal.hide();
+            if (response.ok) {
+              window.location.href = "admin-dashboard.html";
+            } else {
+              window.location.href = "index.html";
             }
-
-            // Cek token login
-            const token = localStorage.getItem('token');
-            if (!token) {
-                alert('Token tidak ditemukan. Silakan login kembali.');
-                return;
-            }
-
-            // Ubah tombol delete menjadi loading state
-            const deleteButton = document.getElementById('deleteButton');
-            deleteButton.disabled = true;
-            deleteButton.textContent = 'Menghapus...';
-
-            try {
-                // Kirim permintaan DELETE ke endpoint API
-                const response = await fetch(`${API_BASE_URL}/ticket/${currentTicketId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Accept': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
-                });
-
-                console.log('Delete Response Status:', response.status);
-
-                // Jika gagal (status bukan 200)
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                // Jika berhasil dihapus
-                alert('Tiket berhasil dihapus!');
-                // Tunggu sebentar sebelum redirect ke dashboard admin
-                setTimeout(() => {
-                    window.location.href = 'admin-dashboard.html';
-                }, 1500);
-
-            } catch (error) {
-                // Tangani error saat menghapus tiket
-                console.error('Error deleting ticket:', error);
-                alert(`Gagal menghapus tiket: ${error.message}`);
-                deleteButton.disabled = false;
-                deleteButton.textContent = 'Hapus Tiket';
-            }
+          }, 2000);
+        } catch (error) {
+          console.error("Detail error tambah data:", error);
+          const errorModal = new bootstrap.Modal(document.getElementById("errorModal"));
+          document.getElementById("errorMessage").textContent = error.message || "Connection error. Please try again.";
+          errorModal.show();
+          setTimeout(() => errorModal.hide(), 2500);
         }
+        // Tunggu sebentar sebelum redirect ke dashboard admin
+        //   setTimeout(() => {
+        //     window.location.href = "admin-dashboard.html";
+        //   }, 1500);
+        // } catch (error) {
+        //   // Tangani error saat menghapus tiket
+        //   console.error("Error deleting ticket:", error);
+        //   alert(`Gagal menghapus tiket: ${error.message}`);
+        //   deleteButton.disabled = false;
+        //   deleteButton.textContent = "Hapus Tiket";
+        // }
+      }
 
-        // Fungsi untuk menampilkan pesan error di elemen HTML
-        function showError(message) {
-            const errorDiv = document.getElementById('errorMessage');
-            errorDiv.innerHTML = `<div class="error-message">${message}</div>`;
-        }
+      // Fungsi untuk menampilkan pesan error di elemen HTML
+      function showError(message) {
+        const errorDiv = document.getElementById("errorMessage");
+        errorDiv.innerHTML = `<div class="error-message">${message}</div>`;
+      }
 
-        // Jalankan loadTicketData() saat halaman selesai dimuat
-        window.addEventListener('DOMContentLoaded', loadTicketData);
+      // Jalankan loadTicketData() saat halaman selesai dimuat
+      window.addEventListener("DOMContentLoaded", loadTicketData);
 
-        // Fungsi Logout — menghapus token dari localStorage lalu arahkan ke login
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            localStorage.removeItem('token');
-            window.location.href = 'login.html';
-        });
+      // Fungsi Logout — menghapus token dari localStorage lalu arahkan ke login
+      document.getElementById("logoutBtn").addEventListener("click", () => {
+        localStorage.removeItem("token");
+        window.location.href = "login.html";
+      });
     </script>
-
-</body>
+  </body>
 </html>
