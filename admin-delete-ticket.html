@@ -182,6 +182,11 @@
             background-color: #b91c1c;
         }
 
+        .btn-delete:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+
         /* Breadcrumb */
         .breadcrumb-link {
             color: #4f46e5;
@@ -194,26 +199,63 @@
         .breadcrumb-link:hover {
             text-decoration: underline;
         }
+
+        .error-message {
+            background-color: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .loading-message {
+            background-color: #dbeafe;
+            color: #0284c7;
+            border: 1px solid #bfdbfe;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-        <div class="container-lg">
-            <a class="navbar-brand" href="#">Wahana Tel U</a>
-            <div class="ms-auto d-flex align-items-center gap-3">
-                <span class="d-none d-lg-inline">Kelola Tiket</span>
-                <div class="avatar-circle">A</div>
+    <nav class="navbar navbar-expand-lg shadow-sm py-3 fixed-top">
+        <div class="container">
+        <a class="navbar-brand fw-bold">Wahana Tel-U</a>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+
+    <!-- Profile Section -->
+            <div class="dropdown">
+            <a href="#" class="d-flex align-items-center gap-2 text-decoration-none" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="assets/user.jpg" alt="User Photo" class="rounded-circle" width="40" height="40" style="object-fit: cover;">
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+                <li><a class="dropdown-item" href="#" id="logoutBtn">Logout</a></li>
+            </ul>
             </div>
+        </div>
         </div>
     </nav>
 
     <!-- Main Content -->
     <div class="main-content container-lg" style="margin-top: 80px;">
         <a href="admin-dashboard.html" class="breadcrumb-link">← Kembali ke Kelola Tiket</a>
+
+        <!-- Page Title -->
+        <div class="mb-4">
+            <h1 class="page-title">Hapus Tiket</h1>
+            <p class="page-subtitle">Pikir-pikir lagi kalo mau hapus</p>
+        </div>
         
         <!-- Delete Confirmation -->
         <div class="delete-container">
+            <div id="errorMessage"></div>
+            <div id="loadingMessage" class="loading-message" style="display: none;">
+                Memuat data tiket...
+            </div>
+
             <div class="delete-icon">⚠️</div>
             <h2 class="delete-title">Hapus Tiket?</h2>
             <p class="delete-description">
@@ -224,25 +266,25 @@
             <div class="ticket-info">
                 <div class="ticket-info-item">
                     <span class="ticket-info-label">Nama Tiket:</span>
-                    <span class="ticket-info-value">VVIP Ticket</span>
+                    <span class="ticket-info-value" id="ticketName">-</span>
                 </div>
                 <div class="ticket-info-item">
                     <span class="ticket-info-label">ID:</span>
-                    <span class="ticket-info-value">0001</span>
+                    <span class="ticket-info-value" id="ticketId">-</span>
                 </div>
                 <div class="ticket-info-item">
                     <span class="ticket-info-label">Quota:</span>
-                    <span class="ticket-info-value">500</span>
+                    <span class="ticket-info-value" id="ticketQuota">-</span>
                 </div>
                 <div class="ticket-info-item">
                     <span class="ticket-info-label">Harga:</span>
-                    <span class="ticket-info-value">Rp. 500.000,00</span>
+                    <span class="ticket-info-value" id="ticketPrice">-</span>
                 </div>
             </div>
 
             <div class="delete-actions">
                 <a href="admin-dashboard.html" class="btn-cancel">Batal</a>
-                <button type="button" class="btn-delete" onclick="confirmDelete()">Hapus Tiket</button>
+                <button type="button" class="btn-delete" id="deleteButton" onclick="deleteTicket()">Hapus Tiket</button>
             </div>
         </div>
     </div>
@@ -254,10 +296,177 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function confirmDelete() {
-            alert('Tiket berhasil dihapus!');
-            window.location.href = 'admin-dashboard.html';
+        // URL dasar untuk API backend
+        const API_BASE_URL = 'https://be-e-wallet.ivantans.web.id';
+        // Variabel global untuk menyimpan ID tiket yang sedang aktif
+        let currentTicketId = null;
+
+        // Fungsi untuk mengambil nilai dari beberapa kemungkinan nama field
+        function getFieldValue(obj, fields) {
+            for (const field of fields) {
+                if (obj && obj[field] !== undefined && obj[field] !== null) {
+                    return obj[field];
+                }
+            }
+            return null; // Kembalikan null jika semua field tidak ditemukan
         }
+
+        // Fungsi untuk mendapatkan ticketId dari parameter URL
+        function getTicketIdFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            const ticketId = params.get('ticketId');
+            console.log('URL Params:', Object.fromEntries(params));
+            console.log('TicketId extracted:', ticketId);
+            return ticketId;
+        }
+
+        // Fungsi utama untuk memuat data tiket berdasarkan ID di URL
+        async function loadTicketData() {
+            currentTicketId = getTicketIdFromUrl(); // Ambil ID dari URL
+
+            // Jika ID tidak ada di URL
+            if (!currentTicketId) {
+                showError('ID tiket tidak ditemukan. Silakan kembali ke halaman kelola tiket.');
+                document.getElementById('deleteButton').disabled = true;
+                return;
+            }
+
+            // Tampilkan indikator loading
+            document.getElementById('loadingMessage').style.display = 'block';
+
+            try {
+                // Ambil token dari localStorage (autentikasi)
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    showError('Token tidak ditemukan. Silakan login kembali.');
+                    document.getElementById('deleteButton').disabled = true;
+                    return;
+                }
+
+                // Kirim permintaan GET ke endpoint detail tiket
+                const response = await fetch(`${API_BASE_URL}/ticket/${currentTicketId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': `Bearer ${token}` // Kirim token sebagai header
+                    }
+                });
+
+                console.log('API Response Status:', response.status);
+
+                // Jika status bukan 200 OK, lempar error
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // Ambil data hasil respons
+                const data = await response.json();
+                console.log('Ticket Data:', data);
+
+                // Data utama tiket (bisa berada di dalam field `data`)
+                const ticketData = data.data || {};
+
+                // Ambil setiap nilai tiket dengan fleksibilitas nama field
+                const ticketName = getFieldValue(ticketData, ['ticketName', 'name', 'ticket_name']);
+                const ticketQuota = getFieldValue(ticketData, ['ticketQuota', 'quota', 'ticket_quota']);
+                const ticketPrice = getFieldValue(ticketData, ['ticketPrice', 'price', 'ticket_price']);
+
+                // Jika data tidak lengkap
+                if (!ticketName || ticketQuota === null || ticketPrice === null) {
+                    showError('Data tiket tidak lengkap.');
+                    document.getElementById('deleteButton').disabled = true;
+                    return;
+                }
+
+                // Masukkan data tiket ke dalam elemen HTML
+                document.getElementById('ticketName').textContent = ticketName;
+                document.getElementById('ticketId').textContent = currentTicketId;
+                document.getElementById('ticketQuota').textContent = ticketQuota;
+                document.getElementById('ticketPrice').textContent = new Intl.NumberFormat('id-ID', {
+                    style: 'currency',
+                    currency: 'IDR'
+                }).format(ticketPrice); // Format harga ke dalam format Rupiah
+
+                // Sembunyikan loading setelah data tampil
+                document.getElementById('loadingMessage').style.display = 'none';
+
+            } catch (error) {
+                // Tangani error saat memuat data
+                console.error('Error loading ticket:', error);
+                showError(`Gagal memuat data tiket: ${error.message}`);
+                document.getElementById('deleteButton').disabled = true;
+                document.getElementById('loadingMessage').style.display = 'none';
+            }
+        }
+
+        // Fungsi untuk menghapus tiket berdasarkan ID
+        async function deleteTicket() {
+            // Pastikan tiket valid
+            if (!currentTicketId) {
+                alert('ID tiket tidak valid.');
+                return;
+            }
+
+            // Cek token login
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Token tidak ditemukan. Silakan login kembali.');
+                return;
+            }
+
+            // Ubah tombol delete menjadi loading state
+            const deleteButton = document.getElementById('deleteButton');
+            deleteButton.disabled = true;
+            deleteButton.textContent = 'Menghapus...';
+
+            try {
+                // Kirim permintaan DELETE ke endpoint API
+                const response = await fetch(`${API_BASE_URL}/ticket/${currentTicketId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                console.log('Delete Response Status:', response.status);
+
+                // Jika gagal (status bukan 200)
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // Jika berhasil dihapus
+                alert('Tiket berhasil dihapus!');
+                // Tunggu sebentar sebelum redirect ke dashboard admin
+                setTimeout(() => {
+                    window.location.href = 'admin-dashboard.html';
+                }, 1500);
+
+            } catch (error) {
+                // Tangani error saat menghapus tiket
+                console.error('Error deleting ticket:', error);
+                alert(`Gagal menghapus tiket: ${error.message}`);
+                deleteButton.disabled = false;
+                deleteButton.textContent = 'Hapus Tiket';
+            }
+        }
+
+        // Fungsi untuk menampilkan pesan error di elemen HTML
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            errorDiv.innerHTML = `<div class="error-message">${message}</div>`;
+        }
+
+        // Jalankan loadTicketData() saat halaman selesai dimuat
+        window.addEventListener('DOMContentLoaded', loadTicketData);
+
+        // Fungsi Logout — menghapus token dari localStorage lalu arahkan ke login
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        });
     </script>
+
 </body>
 </html>
