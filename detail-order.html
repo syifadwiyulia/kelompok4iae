@@ -155,19 +155,18 @@
   const token = localStorage.getItem('token');
   if (!token) window.location.href = 'login.html';
 
-  // 🔹 Ambil data dari localStorage
+  // Ambil data dari localStorage
   const ticketName = localStorage.getItem('ticketName') || '-';
   const ticketPrice = parseInt(localStorage.getItem('ticketPrice')) || 0;
   const ticketQty = parseInt(localStorage.getItem('ticketQty')) || 1;
   const ticketId = Number(localStorage.getItem('ticketId')) || 0;
 
-  // 🔹 Validasi jika ticketId tidak valid
-  if (!ticketId || ticketId < 1) {
+  if (!ticketId) {
     alert("Ticket ID tidak valid. Silakan pilih tiket kembali.");
     window.location.href = "ticket.html";
   }
 
-  // 🔹 Elemen DOM
+  // Elemen DOM
   const ticketNameEl = document.getElementById('ticketName');
   const quantityEl = document.getElementById('quantity');
   const ticketPriceEl = document.getElementById('ticketPrice');
@@ -175,13 +174,13 @@
   const insufficientMsg = document.getElementById('insufficientMsg');
   const payButton = document.getElementById('payButton');
 
-  // 🔹 Isi data tampilan
+  // Isi tampilan
   ticketNameEl.value = ticketName;
   quantityEl.value = ticketQty;
   const totalPrice = ticketPrice * ticketQty;
   ticketPriceEl.value = 'Rp ' + totalPrice.toLocaleString('id-ID');
 
-  // 🔹 Ambil saldo user
+  // Ambil saldo user
   let userBalanceAmount = 0;
   fetch('https://be-e-wallet.ivantans.web.id/user/my-profile', {
     headers: { 'Authorization': 'Bearer ' + token }
@@ -194,10 +193,8 @@
     })
     .catch(err => console.error('Error fetching profile:', err));
 
-  // 🔹 Fungsi buat order tiket
-  async function createOrder(ticketIdParam, qty, amount) {
-    if (!ticketIdParam || ticketIdParam < 1) throw new Error('Ticket ID tidak valid.');
-
+  // 🔹 Order pakai saldo
+  async function createBalanceOrder(ticketIdParam, qty) {
     const res = await fetch('https://be-e-wallet.ivantans.web.id/order/ticket', {
       method: 'POST',
       headers: {
@@ -206,46 +203,92 @@
       },
       body: JSON.stringify({
         ticketId: Number(ticketIdParam),
-        quantity: Number(qty),
-        amount: Number(amount)
+        amount: Number(qty)
       })
     });
 
     const json = await res.json();
     if (!res.ok) throw new Error(json.message || 'Gagal membuat order tiket.');
-    return json.data?.id || json.data?.orderHistoryId || json.id;
+    return json.data?.id || json.id;
   }
 
-  // 🔹 Tombol pembayaran
+  // 🔹 Order pakai QR
+  // 🔹 Order pakai QR (ambil QR + Order ID)
+async function createQrOrder(ticketIdParam, qty) {
+  // 1️⃣ Buat order QR → server balas gambar
+  const qrRes = await fetch('https://be-e-wallet.ivantans.web.id/order/ticket/by-qr', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    },
+    body: JSON.stringify({
+      ticketId: Number(ticketIdParam),
+      amount: Number(qty)
+    })
+  });
+
+  if (!qrRes.ok) throw new Error('Gagal membuat QR code.');
+
+  // 2️⃣ Ambil blob gambar dan ubah ke Base64 agar bisa tampil
+  const blob = await qrRes.blob();
+  const base64 = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+
+  // Simpan QR image & ticket name
+  localStorage.setItem('recentQrBase64', base64);
+  localStorage.setItem('recentTicketName', ticketName);
+
+  // 3️⃣ Panggil API /order/histories/me untuk ambil ID order yang baru dibuat
+  const historyRes = await fetch(
+    'https://be-e-wallet.ivantans.web.id/order/histories/me?currentPage=1&pageSize=1&orderStatus=PAYMENT_PENDING',
+    {
+      headers: { 'Authorization': 'Bearer ' + token }
+    }
+  );
+
+  const historyData = await historyRes.json();
+  const orderHistoryId = historyData?.data?.[0]?.id || null;
+
+  if (!orderHistoryId) {
+    console.warn('Respons /order/histories/me:', historyData);
+    throw new Error('Gagal mendapatkan Order ID dari server.');
+  }
+
+  // Simpan order ID ke localStorage
+  localStorage.setItem('recentOrderHistoryId', orderHistoryId);
+
+  return orderHistoryId;
+}
+
+
+  // 🔹 Klik Pay Now
   payButton.addEventListener('click', async () => {
     const method = document.querySelector('input[name="paymentMethod"]:checked').value;
 
     try {
-      const orderId = await createOrder(ticketId, ticketQty, totalPrice);
-
       if (method === 'balance') {
         if (userBalanceAmount < totalPrice) {
           alert('Saldo tidak cukup, silakan pilih metode QR atau lakukan top up.');
           return;
         }
 
+        const orderId = await createBalanceOrder(ticketId, ticketQty);
         alert('Pembayaran berhasil menggunakan saldo!');
-        window.location.href = 'mytickets.html';
+        window.location.href = 'my-ticket.html';
+      }
 
-      } else if (method === 'qr') {
-        const res = await fetch('https://be-e-wallet.ivantans.web.id/order/ticket/by-qr/payment', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
-          },
-          body: JSON.stringify({ orderId })
-        });
-
-        const qrData = await res.json();
-        if (!res.ok) throw new Error(qrData.message || 'QR Payment gagal');
-
-        window.location.href = `qr-payment-ticket.html?orderId=${orderId}`;
+      if (method === 'qr') {
+        const qrResult = await createQrOrder(ticketId, ticketQty);
+        if (qrResult === 'qr-image') {
+          window.location.href = 'qr-payment-ticket.html';
+        } else {
+          window.location.href = `qr-payment-ticket.html?orderId=${qrResult}`;
+        }
       }
     } catch (err) {
       console.error(err);
@@ -253,12 +296,11 @@
     }
   });
 
-  // 🔹 Logout
+  // Logout
   document.getElementById('logoutBtn').addEventListener('click', () => {
     localStorage.removeItem('token');
     window.location.href = 'login.html';
   });
 </script>
-
 </body>
 </html>

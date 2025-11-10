@@ -50,27 +50,27 @@
       <div class="text-center small">© 2025 Wahana Tel-U. All rights reserved.</div>
     </div>
   </footer>
-
-<script>
+  <script>
   const token = localStorage.getItem('token');
   if (!token) location.href = 'login.html';
 
   async function loadHistories() {
     try {
-      const res = await fetch('https://be-e-wallet.ivantans.web.id/order/histories/{orderHistoryId}', {
+      const res = await fetch('https://be-e-wallet.ivantans.web.id/order/histories/me?currentPage=1&pageSize=10', {
         headers: { 'Authorization': 'Bearer ' + token }
       });
+
       const text = await res.text();
       let data;
       try { data = JSON.parse(text); } catch(e) { data = text; }
+
       if (!res.ok) {
         console.error('Failed to load histories', res.status, data);
         document.getElementById('historiesArea').innerHTML = '<p class="text-danger">Failed to load histories.</p>';
         return;
       }
 
-      // try to get array - maybe data.data or data.data.list or direct array
-      const list = data?.data?.list || data?.data || data;
+      const list = data?.data || [];
       if (!Array.isArray(list) || list.length === 0) {
         document.getElementById('historiesArea').innerHTML = '<p class="text-muted">No order histories found.</p>';
         return;
@@ -78,21 +78,30 @@
 
       const container = document.getElementById('historiesArea');
       container.innerHTML = '';
+
       list.forEach(h => {
         const el = document.createElement('div');
-        el.className = 'card mb-3 p-3';
-        const tid = h?.ticket?.name || h?.ticketName || h?.name || 'Ticket';
-        const qty = h?.quantity || h?.qty || h?.ticketQty || '-';
-        const total = h?.totalPrice || h?.price || (h?.ticket?.price ? h.ticket.price * qty : '-');
+        el.className = 'card mb-3 p-3 shadow-sm border-0 rounded-4';
+
+        // 🔹 Ambil data dari response API
+        const ticketName = h?.ticket?.name || 'Ticket';
+        const qty = h?.ticketAmount || 0;
+        const price = Number(h?.ticketPerPrice || 0);
+        const total = Number(h?.totalPrice || price * qty);
+        const status = h?.status || '-';
+        const date = new Date(h?.createdAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
+
+        // 🔹 Render ke halaman
         el.innerHTML = `
-          <div class="d-flex justify-content-between">
+          <div class="d-flex justify-content-between align-items-center">
             <div>
-              <div style="font-weight:700;color:#333">${tid}</div>
+              <div style="font-weight:700;color:#333">${ticketName}</div>
               <div class="small text-muted">Qty: ${qty}</div>
+              <div class="small text-muted">Tanggal: ${date}</div>
             </div>
             <div class="text-end">
-              <div style="font-weight:700;color:#7b1113">Rp ${Number(total).toLocaleString('id-ID')}</div>
-              <div class="small text-muted">${h?.status || h?.paymentStatus || '-'}</div>
+              <div style="font-weight:700;color:#7b1113">Rp ${total.toLocaleString('id-ID')}</div>
+              <div class="small text-${status === 'SUCCESS' ? 'success' : 'warning'}">${status}</div>
             </div>
           </div>
         `;
@@ -107,6 +116,7 @@
 
   loadHistories();
 
+  // 🔹 Logout
   document.getElementById('logoutBtn').addEventListener('click', () => {
     localStorage.removeItem('token');
     location.href = 'login.html';
