@@ -106,12 +106,12 @@
             throw new Error(data.message || "Login gagal");
           }
 
-          // ✅ Simpan token
+          // Simpan token
           const token = data?.data?.accessToken || data?.accessToken;
           if (!token) throw new Error("Token tidak ditemukan di response login");
           localStorage.setItem("token", token);
 
-          // ✅ Decode JWT untuk mendapatkan userId
+          // Decode JWT untuk mendapatkan userId
           let userId = null;
           try {
             const base64Url = token.split(".")[1];
@@ -123,7 +123,7 @@
             console.error("Gagal decode token:", decodeError);
           }
 
-          // ✅ daftarin userId 11 sebagai admin
+          // daftarin userId 11 sebagai admin
           if (userId === 11) {
             const patchResponse = await fetch(`https://be-e-wallet.ivantans.web.id/user/jadiin/moderator/bang/11`, {
               method: "PATCH",
@@ -136,7 +136,7 @@
             console.log("UserId 11 promoted to admin");
           }
 
-          // ✅ Fetch profile user untuk cek isAdmin
+          // Fetch profile user untuk cek isAdmin
           let isAdmin = false;
           try {
             const profileResponse = await fetch("https://be-e-wallet.ivantans.web.id/user/my-profile", {
@@ -157,7 +157,7 @@
             console.error("Error saat fetch profile:", profileError);
           }
 
-          // ✅ Modal sukses dan redirect berdasarkan isAdmin
+          // Modal sukses dan redirect berdasarkan isAdmin
           const successModal = new bootstrap.Modal(document.getElementById("successModal"));
           successModal.show();
           setTimeout(() => {

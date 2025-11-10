@@ -11,18 +11,18 @@
 </head>
 <body>
   <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg shadow-sm py-3 fixed-top">
+  <nav class="navbar navbar-expand-lg shadow-sm py-3 fixed-top bg-white">
     <div class="container">
-      <a class="navbar-brand fw-bold">Wahana Tel-U</a>
+      <a class="navbar-brand fw-bold" style="color:#7b1113;">Wahana Tel-U</a>
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
         <ul class="navbar-nav me-3 gap-3">
           <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="ticket.html">Tickets</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">My Tickets</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">Top Up</a></li>
+          <li class="nav-item"><a class="nav-link active" href="ticket.html">Tickets</a></li>
+          <li class="nav-item"><a class="nav-link" href="mytickets.html">My Tickets</a></li>
+          <li class="nav-item"><a class="nav-link" href="topup.html">Top Up</a></li>
         </ul>
 
-        <!-- Profile Section -->
+        <!-- Profile -->
         <div class="dropdown">
           <a href="#" class="d-flex align-items-center gap-2 text-decoration-none" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
             <img src="assets/user.jpg" alt="User Photo" class="rounded-circle" width="40" height="40" style="object-fit: cover;">
@@ -40,7 +40,6 @@
   <section class="container mt-5 pt-5" style="padding-top: 120px; padding-bottom: 60px;">
     <h3 class="fw-bold mb-4" style="color:#7b1113;">Daftar Wahana</h3>
     
-    <!-- Ticket Cards -->
     <div class="row">
       <!-- VVIP Ticket -->
       <div class="col-md-4 col-sm-6 mb-4">
@@ -49,15 +48,12 @@
             <div>
               <h5 class="fw-semibold mb-1" style="color:#7b1113;">VVIP Ticket</h5>
               <p class="text-secondary small mb-3">Quota: 500</p>
-              <h4 class="fw-bold mb-4" style="color:#7b1113;">Rp. 500.000,00</h4>
+              <h4 class="fw-bold mb-4" style="color:#7b1113;">Rp 500.000</h4>
             </div>
-            <!-- fixed button class from btn-block to w-100 -->
-            <button
-                class="btn text-white w-100"
-                style="background-color:#5b73d5; border-radius: 12px;"
-                onclick="window.location.href='order.html';"
-                >
-                Beli Tiket
+            <button class="btn text-white w-100"
+              style="background-color:#5b73d5; border-radius: 12px;"
+              onclick="selectTicket(1, 'VVIP Ticket', 500000)">
+              Beli Tiket
             </button>
           </div>
         </div>
@@ -70,9 +66,13 @@
             <div>
               <h5 class="fw-semibold mb-1" style="color:#7b1113;">VIP Ticket</h5>
               <p class="text-secondary small mb-3">Quota: 500</p>
-              <h4 class="fw-bold mb-4" style="color:#7b1113;">Rp. 400.000,00</h4>
+              <h4 class="fw-bold mb-4" style="color:#7b1113;">Rp 400.000</h4>
             </div>
-            <button class="btn text-white w-100" style="background-color:#5b73d5; border-radius: 12px;">Beli Tiket</button>
+            <button class="btn text-white w-100"
+              style="background-color:#5b73d5; border-radius: 12px;"
+              onclick="selectTicket(2, 'VIP Ticket', 400000)">
+              Beli Tiket
+            </button>
           </div>
         </div>
       </div>
@@ -84,9 +84,13 @@
             <div>
               <h5 class="fw-semibold mb-1" style="color:#7b1113;">Normal Ticket</h5>
               <p class="text-secondary small mb-3">Quota: 500</p>
-              <h4 class="fw-bold mb-4" style="color:#7b1113;">Rp. 200.000,00</h4>
+              <h4 class="fw-bold mb-4" style="color:#7b1113;">Rp 200.000</h4>
             </div>
-            <button class="btn text-white w-100" style="background-color:#5b73d5; border-radius: 12px;">Beli Tiket</button>
+            <button class="btn text-white w-100"
+              style="background-color:#5b73d5; border-radius: 12px;"
+              onclick="selectTicket(3, 'Normal Ticket', 200000)">
+              Beli Tiket
+            </button>
           </div>
         </div>
       </div>
@@ -94,15 +98,15 @@
   </section>
 
   <!-- Footer -->
-  <footer class="text-white py-5 pt-5" style="background-color: #7b1113 !important; border-top-left-radius: 30px; border-top-right-radius: 30px;">
+  <footer class="text-white py-5 pt-5"
+          style="background-color: #7b1113 !important; border-top-left-radius: 30px; border-top-right-radius: 30px;">
     <div class="container">
       <div class="row justify-content-between align-items-start">
         <div class="col-lg-4 col-md-6 mb-4">
           <h3 class="fw-bold">Wahana Tel-U</h3>
-          <p class="mb-0">
-            Wahana Tel-U provides easy access for Telkom University students to digital campus services.
-          </p>
+          <p class="mb-0">Wahana Tel-U provides easy access for Telkom University students to digital campus services.</p>
         </div>
+
         <div class="col-lg-3 col-md-3 mb-4">
           <h6 class="fw-semibold mb-3">Learn & Get Help</h6>
           <ul class="list-unstyled">
@@ -112,6 +116,7 @@
             <li><a href="#" class="text-white text-decoration-none">FAQs</a></li>
           </ul>
         </div>
+
         <div class="col-lg-4 col-md-6 mb-4">
           <h6 class="fw-semibold mb-3">Contact</h6>
           <p class="mb-1">Telkom University, Bandung</p>
@@ -119,9 +124,7 @@
         </div>
       </div>
       <hr class="border-light" />
-      <div class="text-center small">
-        © 2025 Wahana Tel-U. All rights reserved.
-      </div>
+      <div class="text-center small">© 2025 Wahana Tel-U. All rights reserved.</div>
     </div>
   </footer>
 
@@ -139,6 +142,16 @@
       localStorage.removeItem('token');
       window.location.href = 'login.html';
     });
+
+    // === Fungsi saat klik "Beli Tiket" ===
+    function selectTicket(id, name, price) {
+      localStorage.setItem('ticketId', id);
+      localStorage.setItem('ticketName', name);
+      localStorage.setItem('ticketPrice', price);
+      localStorage.setItem('ticketQty', 500);
+      console.log('Tiket dipilih:', { id, name, price });
+      window.location.href = 'detail-order.html';
+    }
   </script>
 </body>
 </html>
