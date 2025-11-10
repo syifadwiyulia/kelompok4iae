@@ -180,13 +180,21 @@
 </head>
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
-        <div class="container-lg">
-            <a class="navbar-brand" href="#">Wahana Tel U</a>
-            <div class="ms-auto d-flex align-items-center gap-3">
-                <span class="d-none d-lg-inline">Kelola Tiket</span>
-                <div class="avatar-circle">A</div>
+    <nav class="navbar navbar-expand-lg shadow-sm py-3 fixed-top">
+        <div class="container">
+        <a class="navbar-brand fw-bold">Wahana Tel-U</a>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+
+    <!-- Profile Section -->
+            <div class="dropdown">
+            <a href="#" class="d-flex align-items-center gap-2 text-decoration-none" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="assets/user.jpg" alt="User Photo" class="rounded-circle" width="40" height="40" style="object-fit: cover;">
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+                <li><a class="dropdown-item" href="#" id="logoutBtn">Logout</a></li>
+            </ul>
             </div>
+        </div>
         </div>
     </nav>
 
@@ -205,22 +213,17 @@
             <form id="addTicketForm">
                 <div class="form-group">
                     <label class="form-label">Nama Tiket *</label>
-                    <input type="text" class="form-control" placeholder="Contoh: VVIP Ticket" required>
+                    <input type="text" id="ticketName" class="form-control" placeholder="Contoh: VVIP Ticket" required>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Quota *</label>
-                    <input type="number" class="form-control" placeholder="Contoh: 500" min="1" required>
+                    <input type="number" id="ticketQuota" class="form-control" placeholder="Contoh: 500" min="1" required>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">Harga (Rp) *</label>
-                    <input type="number" class="form-control" placeholder="Contoh: 500000" min="1000" required>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Deskripsi</label>
-                    <textarea class="form-control" rows="3" placeholder="Deskripsi tiket (opsional)"></textarea>
+                    <input type="number" id="ticketPrice" class="form-control" placeholder="Contoh: 500000" min="1000" required>
                 </div>
 
                 <div class="form-actions">
@@ -237,12 +240,66 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        document.getElementById('addTicketForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            alert('Tiket berhasil ditambahkan!');
-            window.location.href = 'admin-dashboard.html';
+        // Menambahkan event listener pada form dengan id 'addTicketForm' 
+        // agar ketika form disubmit, fungsi async berikut dijalankan
+        document.getElementById('addTicketForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); // Mencegah halaman reload secara default saat form dikirim
+
+            // Mengambil nilai dari input form
+            const ticketName = document.getElementById('ticketName').value;
+            const ticketQuota = document.getElementById('ticketQuota').value;
+            const ticketPrice = document.getElementById('ticketPrice').value;
+
+            // Mengambil token dari localStorage (token digunakan untuk autentikasi ke API)
+            const token = localStorage.getItem('token');
+            if (!token) {
+                // Jika token tidak ada, user diarahkan ke halaman login
+                alert('Token tidak ditemukan. Silakan login kembali.');
+                window.location.href = 'login.html';
+                return; // Menghentikan eksekusi fungsi
+            }
+
+            try {
+                // Mengirim request ke endpoint API untuk menambahkan tiket baru
+                const response = await fetch('https://be-e-wallet.ivantans.web.id/ticket', {
+                    method: 'POST', 
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        // Data tiket yang akan dikirim ke backend
+                        ticketName: ticketName,
+                        ticketQuota: parseInt(ticketQuota),
+                        ticketPrice: parseInt(ticketPrice)
+                    })
+                });
+
+                // Mengecek apakah response berhasil
+                if (response.ok) {
+                    const data = await response.json();
+                    alert('Tiket berhasil ditambahkan!');
+                    window.location.href = 'admin-dashboard.html';
+                } else {
+                    // Jika response gagal, tampilkan pesan error dari server
+                    const errorData = await response.json();
+                    alert('Gagal menambahkan tiket: ' + (errorData.message || 'Terjadi kesalahan'));
+                }
+            } catch (error) {
+                // Menangani error yang mungkin terjadi, misalnya koneksi server gagal
+                console.log("Error:", error);
+                alert('Terjadi kesalahan saat menghubungi server');
+            }
+        });
+
+        // Event listener untuk tombol logout
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
         });
     </script>
+
 </body>
 </html>
