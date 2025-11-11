@@ -24,9 +24,8 @@
     #insufficientMsg {
       display: none;
       color: red;
-      font-size: 0.85rem;
-      margin-left: 25px;
-      margin-top: 3px;
+      font-size: 0.9rem;
+      margin-top: 6px;
     }
   </style>
 </head>
@@ -90,20 +89,17 @@
               </div>
             </div>
 
-            <div class="form-check d-flex justify-content-between align-items-center mb-1">
-              <div class="d-flex align-items-center gap-2">
-                <input class="form-check-input" type="radio" name="paymentMethod" id="payBalance" value="balance" checked>
-                <label class="form-check-label" for="payBalance">Use Balance</label>
-              </div>
+            <div class="form-check d-flex align-items-center gap-2 mb-1">
+              <input class="form-check-input" type="radio" name="paymentMethod" id="payBalance" value="balance">
+              <label class="form-check-label" for="payBalance">Use Balance</label>
             </div>
-            <div>
-              <small id="insufficientMsg">Insufficient balance</small>
-            </div>
-
             <div class="form-check mt-2">
               <input class="form-check-input" type="radio" name="paymentMethod" id="payQr" value="qr">
               <label class="form-check-label" for="payQr">QR Payment</label>
             </div>
+
+            <!-- Info saldo -->
+            <div id="insufficientMsg"></div>
           </div>
 
           <div class="d-flex justify-content-end mt-4">
@@ -152,7 +148,7 @@
   const token = localStorage.getItem('token');
   if (!token) window.location.href = 'login.html';
 
-  // Ambil data dari localStorage
+  // Ambil data tiket
   const ticketName = localStorage.getItem('ticketName') || '-';
   const ticketPrice = parseInt(localStorage.getItem('ticketPrice')) || 0;
   const ticketQty = parseInt(localStorage.getItem('ticketQty')) || 1;
@@ -163,22 +159,23 @@
     window.location.href = "ticket.html";
   }
 
-  // Elemen DOM
   const ticketNameEl = document.getElementById('ticketName');
   const quantityEl = document.getElementById('quantity');
   const ticketPriceEl = document.getElementById('ticketPrice');
   const sidebarBalance = document.getElementById('sidebarBalance');
   const insufficientMsg = document.getElementById('insufficientMsg');
   const payButton = document.getElementById('payButton');
+  const payBalance = document.getElementById('payBalance');
+  const payQr = document.getElementById('payQr');
 
-  // Isi tampilan
   ticketNameEl.value = ticketName;
   quantityEl.value = ticketQty;
   const totalPrice = ticketPrice * ticketQty;
   ticketPriceEl.value = 'Rp ' + totalPrice.toLocaleString('id-ID');
 
-  // Ambil saldo user
   let userBalanceAmount = 0;
+
+  // Ambil saldo user
   fetch('https://be-e-wallet.ivantans.web.id/user/my-profile', {
     headers: { 'Authorization': 'Bearer ' + token }
   })
@@ -187,19 +184,33 @@
       userBalanceAmount = Number(json?.data?.balance || 0);
       sidebarBalance.textContent = 'Rp ' + userBalanceAmount.toLocaleString('id-ID');
 
+      // Cek kondisi saldo
       if (userBalanceAmount === 0) {
-        insufficientMsg.textContent = 'You have no balance. Please top up first!';
+        insufficientMsg.innerHTML = `
+          <span>You have no balance. Please <b><a href="topup.html" class="text-danger text-decoration-none">Top Up here</a></b> before continuing.</span>
+        `;
         insufficientMsg.style.display = 'block';
+        payBalance.disabled = true;
+        payQr.disabled = true;
+        payButton.disabled = true;
       } else if (userBalanceAmount < totalPrice) {
-        insufficientMsg.textContent = 'Insufficient balance';
+        insufficientMsg.innerHTML = `
+          <span>Your balance is insufficient. You can <b><a href="topup.html" class="text-danger text-decoration-none">Top Up here</a></b> or use QR Payment instead.</span>
+        `;
         insufficientMsg.style.display = 'block';
+        payBalance.disabled = true;
+        payQr.disabled = false;
+        payButton.disabled = false;
       } else {
         insufficientMsg.style.display = 'none';
+        payBalance.disabled = false;
+        payQr.disabled = false;
+        payButton.disabled = false;
       }
     })
     .catch(err => console.error('Error fetching profile:', err));
 
-  // 🔹 Order pakai saldo
+  // Order pakai saldo
   async function createBalanceOrder(ticketIdParam, qty) {
     const res = await fetch('https://be-e-wallet.ivantans.web.id/order/ticket', {
       method: 'POST',
@@ -212,13 +223,12 @@
         amount: Number(qty)
       })
     });
-
     const json = await res.json();
     if (!res.ok) throw new Error(json.message || 'Failed to create ticket order.');
     return json.data?.id || json.id;
   }
 
-  // 🔹 Order pakai QR
+  // Order pakai QR
   async function createQrOrder(ticketIdParam, qty) {
     const qrRes = await fetch('https://be-e-wallet.ivantans.web.id/order/ticket/by-qr', {
       method: 'POST',
@@ -244,44 +254,25 @@
 
     localStorage.setItem('recentQrBase64', base64);
     localStorage.setItem('recentTicketName', ticketName);
-
-    const historyRes = await fetch(
-      'https://be-e-wallet.ivantans.web.id/order/histories/me?currentPage=1&pageSize=1&orderStatus=PAYMENT_PENDING',
-      { headers: { 'Authorization': 'Bearer ' + token } }
-    );
-
-    const historyData = await historyRes.json();
-    const orderHistoryId = historyData?.data?.[0]?.id || null;
-
-    if (!orderHistoryId) throw new Error('Failed to get Order ID from server.');
-
-    localStorage.setItem('recentOrderHistoryId', orderHistoryId);
-    return orderHistoryId;
+    window.location.href = 'qr-payment-ticket.html';
   }
 
-  // 🔹 Klik Pay Now
+  // Klik Pay Now
   payButton.addEventListener('click', async () => {
-    const method = document.querySelector('input[name="paymentMethod"]:checked').value;
+    const methodInput = document.querySelector('input[name="paymentMethod"]:checked');
+    if (!methodInput) {
+      alert('Please select a payment method first.');
+      return;
+    }
+    const method = methodInput.value;
 
     try {
       if (method === 'balance') {
-        if (userBalanceAmount === 0) {
-          alert('You have no balance. Please top up first!');
-          return;
-        }
-        if (userBalanceAmount < totalPrice) {
-          alert('Insufficient balance. Please top up or use QR payment.');
-          return;
-        }
-
         const orderId = await createBalanceOrder(ticketId, ticketQty);
         alert('Payment successful using balance!');
         window.location.href = 'my-ticket.html';
-      }
-
-      if (method === 'qr') {
-        const qrResult = await createQrOrder(ticketId, ticketQty);
-        window.location.href = `qr-payment-ticket.html?orderId=${qrResult}`;
+      } else if (method === 'qr') {
+        await createQrOrder(ticketId, ticketQty);
       }
     } catch (err) {
       console.error(err);

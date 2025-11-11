@@ -268,19 +268,19 @@
 
       <!-- Page Title -->
       <div class="mb-4 text-center">
-        <h1 class="page-title fw-bold" style="color: #7b1113">Edit Tiket</h1>
-        <p class="page-subtitle">Ubah informasi tiket di bawah ini</p>
+        <h1 class="page-title fw-bold" style="color: #7b1113">Edit Ticket</h1>
+        <p class="page-subtitle">Change ticket information below</p>
       </div>
 
       <!-- Alert Messages -->
-      <div id="successAlert" class="alert alert-success" style="display: none">Tiket berhasil diperbarui!</div>
+      <div id="successAlert" class="alert alert-success" style="display: none">Ticket updated successfully!</div>
       <div id="errorAlert" class="alert alert-error" style="display: none"></div>
 
       <!-- Form -->
       <div class="form-container mx-auto">
         <form id="editTicketForm">
           <div class="form-group">
-            <label class="form-label">Nama Tiket *</label>
+            <label class="form-label">Ticket Name *</label>
             <input type="text" id="ticketName" class="form-control" placeholder="Masukkan nama tiket" required />
           </div>
 
@@ -290,13 +290,13 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Harga (Rp) *</label>
+            <label class="form-label">Price (Rp) *</label>
             <input type="number" id="ticketPrice" class="form-control" placeholder="Masukkan harga tiket" min="1000" required />
           </div>
 
           <div class="form-actions">
-            <a href="admin-dashboard.html" class="btn-cancel">Batal</a>
-            <button type="submit" id="submitBtn" class="btn-submit">Simpan Perubahan</button>
+            <a href="admin-dashboard.html" class="btn-cancel">Cancelled</a>
+            <button type="submit" id="submitBtn" class="btn-submit" style="background-color: #7b1113;">Save Changes</button>
           </div>
         </form>
       </div>

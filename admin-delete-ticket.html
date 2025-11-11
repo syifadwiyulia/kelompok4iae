@@ -268,23 +268,23 @@
 
       <!-- Page Title -->
       <div class="mb-4 text-center">
-        <h1 class="page-title fw-bold" style="color: #7b1113">Hapus Tiket</h1>
-        <p class="page-subtitle">Pikir-pikir lagi kalo mau hapus</p>
+        <h1 class="page-title fw-bold" style="color: #7b1113">Delete Ticket</h1>
+        <p class="page-subtitle">Think again if you want to delete it</p>
       </div>
 
       <!-- Delete Confirmation -->
       <div class="delete-container mx-auto">
         <div id="errorMessage"></div>
-        <div id="loadingMessage" class="loading-message" style="display: none">Memuat data tiket...</div>
+        <div id="loadingMessage" class="loading-message" style="display: none">Loading ticket data...</div>
 
         <div class="delete-icon">⚠️</div>
-        <h2 class="delete-title">Hapus Tiket?</h2>
-        <p class="delete-description">Apakah Anda yakin ingin menghapus tiket ini? Tindakan ini tidak dapat dibatalkan.</p>
+        <h2 class="delete-title">Delete Ticket?</h2>
+        <p class="delete-description">Are you sure you want to delete this ticket? This action cannot be undone.</p>
 
         <!-- Ticket Info -->
         <div class="ticket-info">
           <div class="ticket-info-item">
-            <span class="ticket-info-label">Nama Tiket:</span>
+            <span class="ticket-info-label">Ticket Name:</span>
             <span class="ticket-info-value" id="ticketName">-</span>
           </div>
           <div class="ticket-info-item">
@@ -296,14 +296,14 @@
             <span class="ticket-info-value" id="ticketQuota">-</span>
           </div>
           <div class="ticket-info-item">
-            <span class="ticket-info-label">Harga:</span>
+            <span class="ticket-info-label">Price:</span>
             <span class="ticket-info-value" id="ticketPrice">-</span>
           </div>
         </div>
 
         <div class="delete-actions">
-          <a href="admin-dashboard.html" class="btn-cancel">Batal</a>
-          <button type="button" class="btn-delete" id="deleteButton" onclick="deleteTicket()">Hapus Tiket</button>
+          <a href="admin-dashboard.html" class="btn-cancel">Cancelled</a>
+          <button style="background-color: #7b1113;" type="button" class="btn-delete" id="deleteButton" onclick="deleteTicket()">Delete Ticket</button>
         </div>
       </div>
     </div>

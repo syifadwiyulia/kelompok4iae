@@ -26,6 +26,12 @@
       border-top-left-radius: 30px;
       border-top-right-radius: 30px;
     }
+
+    .ticket-name {
+      color: #7b1113;
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
   </style>
 </head>
 <body>
@@ -147,7 +153,6 @@
 
         const ticketName = t?.ticket?.name || '-';
         const ticketPrice = Number(t?.ticket?.price || 0);
-        const ticketCode = t?.ticketUniqueId || '-';
         const date = new Date(t?.createdAt).toLocaleString('id-ID', {
           dateStyle: 'medium',
           timeStyle: 'short'
@@ -156,8 +161,7 @@
         el.innerHTML = `
           <div class="d-flex justify-content-between align-items-center">
             <div>
-              <div class="fw-bold" style="color:#333">${ticketName}</div>
-              <div class="small text-muted">Ticket Code: <strong>${ticketCode}</strong></div>
+              <div class="ticket-name">${ticketName}</div>
               <div class="small text-muted">Issued: ${date}</div>
             </div>
             <div class="text-end">

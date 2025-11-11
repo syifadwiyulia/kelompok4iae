@@ -143,74 +143,77 @@
   <!-- JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
   <script>
-    // Ambil data dari localStorage
-    const token = localStorage.getItem("token");
-    const paymentLink = localStorage.getItem("paymentLink");
-    const amount = localStorage.getItem("topupAmount");
-    let oldBalance = localStorage.getItem("userBalance") ? parseInt(localStorage.getItem("userBalance")) : 0;
+  const token = localStorage.getItem("token");
+  const paymentLink = localStorage.getItem("paymentLink");
+  const amount = parseInt(localStorage.getItem("topupAmount") || 0);
+  let oldBalance = 0;
 
-    if (!token || !paymentLink || !amount) {
-      alert("Payment data not found.");
-      window.location.href = "topup.html";
+  if (!token || !paymentLink || !amount) {
+    alert("Payment data not found.");
+    window.location.href = "topup.html";
+  }
+
+  // Display amount
+  document.getElementById("amountText").textContent =
+    "Rp " + amount.toLocaleString("id-ID");
+
+  // Generate QR
+  document.getElementById("payBtn").href = paymentLink;
+  new QRCode(document.getElementById("qrcode"), {
+    text: paymentLink,
+    width: 200,
+    height: 200,
+  });
+
+  // Utility: get current balance safely
+  async function getCurrentBalance() {
+    try {
+      const res = await fetch("https://be-e-wallet.ivantans.web.id/user/my-profile", {
+        headers: { Authorization: "Bearer " + token },
+      });
+      const data = await res.json();
+      return Number(data?.data?.balance || 0);
+    } catch (err) {
+      console.error("Error fetching balance:", err);
+      return 0;
     }
+  }
 
-    // Tampilkan jumlah top-up
-    document.getElementById("amountText").textContent = "Rp " + parseInt(amount).toLocaleString("id-ID");
+  // Get initial balance
+  getCurrentBalance().then((b) => {
+    oldBalance = b;
+    console.log("Old Balance:", oldBalance);
+  });
 
-    // Set link Pay Now
-    document.getElementById("payBtn").href = paymentLink;
+  // When user clicks “I've Paid”
+  document.getElementById("checkPaymentBtn").addEventListener("click", async () => {
+    try {
+      const newBalance = await getCurrentBalance();
+      console.log("New Balance:", newBalance);
 
-    // Generate QR Code
-    new QRCode(document.getElementById("qrcode"), {
-      text: paymentLink,
-      width: 200,
-      height: 200
-    });
-
-    // Tombol "I've Paid"
-    document.getElementById("checkPaymentBtn").addEventListener("click", async () => {
-      try {
-        const res = await fetch("https://be-e-wallet.ivantans.web.id/user/my-profile", {
-          headers: { "Authorization": "Bearer " + token }
-        });
-        const data = await res.json();
-
-        if (res.ok && data.data) {
-          const newBalance = data.data.balance;
-
-          if (newBalance > oldBalance) {
-            // ✅ Pembayaran berhasil
-            document.getElementById("newBalance").textContent = newBalance.toLocaleString("id-ID");
-            new bootstrap.Modal(document.getElementById("successModal")).show();
-            localStorage.setItem("userBalance", newBalance);
-            oldBalance = newBalance;
-          } else {
-            // ⚠️ Belum melakukan pembayaran → modal gagal
-            document.getElementById("pendingAmount").textContent = parseInt(amount).toLocaleString("id-ID");
-            new bootstrap.Modal(document.getElementById("failedPaymentModal")).show();
-          }
-        } else {
-          // Error dari API
-          alert("Error checking payment. Please try again.");
-        }
-      } catch (err) {
-        console.error(err);
-        alert("Error checking payment. Please try again.");
+      if (newBalance > oldBalance) {
+        document.getElementById("newBalance").textContent =
+          newBalance.toLocaleString("id-ID");
+        new bootstrap.Modal(document.getElementById("successModal")).show();
+      } else {
+        document.getElementById("pendingAmount").textContent =
+          amount.toLocaleString("id-ID");
+        new bootstrap.Modal(document.getElementById("failedPaymentModal")).show();
       }
-    });
+    } catch (err) {
+      console.error("Error verifying payment:", err);
+      document.getElementById("pendingAmount").textContent =
+        amount.toLocaleString("id-ID");
+      new bootstrap.Modal(document.getElementById("failedPaymentModal")).show();
+    }
+  });
 
-    // Logout
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      localStorage.removeItem("token");
-      localStorage.removeItem("userEmail");
-      localStorage.removeItem("userId");
-      localStorage.removeItem("topupAmount");
-      localStorage.removeItem("paymentLink");
-      localStorage.removeItem("userBalance");
-      window.location.href = "login.html";
-    });
-  </script>
+  // Logout
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    localStorage.clear();
+    window.location.href = "login.html";
+  });
+</script>
 </body>
 </html>
