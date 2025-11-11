@@ -321,6 +321,18 @@
       async function loadTicketData() {
         const ticketId = getTicketIdFromUrl();
 
+        // Ambil data sementara dari localStorage
+        const cachedData = localStorage.getItem("ticketData");
+        if (cachedData) {
+          const ticket = JSON.parse(cachedData);
+          if (ticket.id == ticketId) {
+            document.getElementById("ticketName").value = ticket.name || "";
+            document.getElementById("ticketQuota").value = ticket.quota || "";
+            document.getElementById("ticketPrice").value = ticket.price || "";
+            return;
+          }
+        }
+
         // Jika ticketId tidak ditemukan di URL
         if (!ticketId) {
           alert("ID tiket tidak ditemukan. Silakan kembali ke halaman kelola tiket.");

@@ -379,6 +379,18 @@
         return null; // Jika semua nama field tidak ada
       }
 
+      function openEditPage(id, name, quota, price) {
+        // Simpan data sementara ke localStorage
+        const ticketData = {
+          id: id,
+          name: name,
+          quota: quota,
+          price: price,
+        };
+        localStorage.setItem("ticketData", JSON.stringify(ticketData));
+        window.location.href = `admin-edit-ticket.html?ticketId=${id}`;
+      }
+
       // Fungsi utama untuk memuat data semua tiket dari API
       function loadTickets() {
         const currentPage = 1; // Halaman saat ini
@@ -473,7 +485,7 @@
                         <td class="ticket-price">${formattedPrice}</td>
                         <td>
                             <div class="action-buttons">
-                                <a href="admin-edit-ticket.html?ticketId=${ticketId}" class="btn-edit" title="Edit">✎</a>
+                                <a href="#" class="btn-edit" title="Edit" onclick="openEditPage(${ticketId}, '${ticketName}', ${ticketQuota}, ${ticketPrice})">✎</a>
                                 <a href="admin-delete-ticket.html?ticketId=${ticketId}" class="btn-delete" title="Hapus">🗑</a>
                             </div>
                         </td>
