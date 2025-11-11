@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  e-ticket-app:
+    build: .
+    container_name: e-ticket-app
+    restart: unless-stopped
+    networks:
+      - proxy
+    labels:
+      com.github.nginx-proxy-manager: "enabled"
+    expose:
+      - "80"  
+
+networks:
+  proxy:
+    external: true
