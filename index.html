@@ -133,7 +133,7 @@
       "Go-Kart Arena": "assets/gokart.png",
       "VR Experience": "assets/VR.png",
       "Mini Golf": "assets/mini golf.png",
-      "Ferris Wheel": "assets/ferris wheel.png"
+      "Ferris Wheel": "assets/ferris wheel"
     };
 
     // Fetch tickets from API
@@ -150,24 +150,28 @@
       if (Array.isArray(tickets) && tickets.length > 0) {
         tickets.forEach(ticket => {
           // Pilih gambar berdasarkan nama tiket
-          const imgSrc = ticketImages[ticket.name] || "assets/default-ticket.png";
+          const imgSrc = ticketImages[ticket.name] || "assets/ferris wheel.png";
 
           const card = document.createElement("div");
           card.className = "col-md-3 col-sm-6 mb-4";
 
           card.innerHTML = `
-            <div class="card h-100 shadow-sm border-0 game-card rounded-4">
-              <div class="card-body d-flex flex-column justify-content-between align-items-center text-center" style="color:#7b1113;">
-                <img src="${imgSrc}" alt="${ticket.name}" class="img-fluid mb-3" style="max-width: 200px;">
-                <div>
-                  <h5 class="fw-semibold mb-2">${ticket.name}</h5>
-                  <p class="text-secondary mb-3">Rp ${ticket.price.toLocaleString("id-ID")} / ticket</p>
-                  <p class="text-secondary mb-0">Quota: ${ticket.quota}</p>
-                </div>
-                <button class="btn btn-sm text-white" style="background-color:#7b1113;" onclick='localStorage.setItem("selectedTicket", JSON.stringify(${JSON.stringify(ticket)})); window.location.href="order.html";'> Buy Ticket
-                </button>
+          <div class="card h-100 shadow-sm border-0 game-card rounded-4">
+            <div class="card-body d-flex flex-column justify-content-between align-items-center text-center" style="color:#7b1113;">
+              <div style="width: 200px; height: 150px; display: flex; justify-content: center; align-items: center;">
+                <img src="${imgSrc}" alt="${ticket.name}" style="max-width: 100%; max-height: 100%; object-fit: contain;">
               </div>
+              <div>
+                <h5 class="fw-semibold mb-2">${ticket.name}</h5>
+                <p class="text-secondary mb-3">Rp ${ticket.price.toLocaleString("id-ID")} / ticket</p>
+                <p class="text-secondary mb-0">Quota: ${ticket.quota}</p>
+              </div>
+              <button class="btn btn-sm text-white" style="background-color:#7b1113;" 
+                onclick='localStorage.setItem("selectedTicket", JSON.stringify(${JSON.stringify(ticket)})); window.location.href="order.html";'>
+                Buy Ticket
+              </button>
             </div>
+          </div>
           `;
           container.appendChild(card);
         });

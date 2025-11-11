@@ -18,8 +18,8 @@
       <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
         <ul class="navbar-nav me-3 gap-3">
           <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="#tickets">Tickets</a></li>
-          <li class="nav-item"><a class="nav-link" href="#">My Tickets</a></li>
+          <li class="nav-item"><a class="nav-link" href="ticket.html">Tickets</a></li>
+          <li class="nav-item"><a class="nav-link" href="my-ticket.html">My Tickets</a></li>
           <li class="nav-item"><a class="nav-link" href="topup.html">Top Up</a></li>
         </ul>
 
@@ -126,14 +126,16 @@
     </div>
   </div>
 
-  <!-- Modal FAILED -->
-  <div class="modal fade" id="failedModal" tabindex="-1" aria-hidden="true">
+  <!-- Modal FAILED PAYMENT -->
+  <div class="modal fade" id="failedPaymentModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content text-center p-4">
-        <i class="bi bi-x-circle-fill text-danger fs-1 mb-3"></i>
-        <h5 class="fw-bold mb-2">Payment Failed 😞</h5>
-        <p>We couldn't verify your payment. Please try again.</p>
-        <button class="btn btn-danger mt-3 px-4" data-bs-dismiss="modal">Close</button>
+      <div class="modal-content text-center p-5 border-0 rounded-4">
+        <i class="bi bi-x-circle-fill mb-4" style="font-size: 4rem; color:#7b1113;"></i>
+        <h4 class="fw-bold mb-2">Payment Failed</h4>
+        <p>It seems you haven't completed your payment yet. Please complete your payment and try again.</p>
+        <h2 class="fw-bold" style="color:#7b1113;">Rp <span id="pendingAmount">0</span></h2>
+        <button class="btn btn-danger mt-4 px-4 py-2 rounded-3 fw-semibold" style="background-color: #7b1113;" 
+                data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
@@ -143,19 +145,21 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
   <script>
+    // Ambil data dari localStorage
     const token = localStorage.getItem("token");
     const paymentLink = localStorage.getItem("paymentLink");
     const amount = localStorage.getItem("topupAmount");
+    let oldBalance = localStorage.getItem("userBalance") ? parseInt(localStorage.getItem("userBalance")) : 0;
 
     if (!token || !paymentLink || !amount) {
       alert("Payment data not found.");
       window.location.href = "topup.html";
     }
 
-    // Display amount
+    // Tampilkan jumlah top-up
     document.getElementById("amountText").textContent = "Rp " + parseInt(amount).toLocaleString("id-ID");
 
-    // Set payment link
+    // Set link Pay Now
     document.getElementById("payBtn").href = paymentLink;
 
     // Generate QR Code
@@ -165,7 +169,7 @@
       height: 200
     });
 
-    // Handle Payment Verification
+    // Tombol "I've Paid"
     document.getElementById("checkPaymentBtn").addEventListener("click", async () => {
       try {
         const res = await fetch("https://be-e-wallet.ivantans.web.id/user/my-profile", {
@@ -174,25 +178,37 @@
         const data = await res.json();
 
         if (res.ok && data.data) {
-          document.getElementById("newBalance").textContent =
-            data.data.balance.toLocaleString("id-ID");
-          new bootstrap.Modal(document.getElementById("successModal")).show();
+          const newBalance = data.data.balance;
+
+          if (newBalance > oldBalance) {
+            // ✅ Pembayaran berhasil
+            document.getElementById("newBalance").textContent = newBalance.toLocaleString("id-ID");
+            new bootstrap.Modal(document.getElementById("successModal")).show();
+            localStorage.setItem("userBalance", newBalance);
+            oldBalance = newBalance;
+          } else {
+            // ⚠️ Belum melakukan pembayaran → modal gagal
+            document.getElementById("pendingAmount").textContent = parseInt(amount).toLocaleString("id-ID");
+            new bootstrap.Modal(document.getElementById("failedPaymentModal")).show();
+          }
         } else {
-          new bootstrap.Modal(document.getElementById("failedModal")).show();
+          // Error dari API
+          alert("Error checking payment. Please try again.");
         }
       } catch (err) {
         console.error(err);
-        new bootstrap.Modal(document.getElementById("failedModal")).show();
+        alert("Error checking payment. Please try again.");
       }
     });
 
-    // ==== LOGOUT SCRIPT ====
+    // Logout
     document.getElementById("logoutBtn").addEventListener("click", () => {
       localStorage.removeItem("token");
       localStorage.removeItem("userEmail");
       localStorage.removeItem("userId");
       localStorage.removeItem("topupAmount");
       localStorage.removeItem("paymentLink");
+      localStorage.removeItem("userBalance");
       window.location.href = "login.html";
     });
   </script>
